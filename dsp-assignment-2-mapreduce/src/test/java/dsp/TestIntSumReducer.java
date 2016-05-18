@@ -17,8 +17,7 @@ public class TestIntSumReducer {
 	@Before
 	public void setUp() {
 		Reducer<Text,IntWritable,Text,IntWritable> reducer = new IntSumReducer();
-		reduceDriver = ReduceDriver.newReduceDriver();
-		reduceDriver.setReducer(reducer);
+		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
 	@Test
