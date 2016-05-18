@@ -19,3 +19,6 @@ In order to run the app (currently a wordcount app):
 
 We are currentyly based on [hadoop official tutorial](https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html)
 and a [tikal tutorial](http://www.tikalk.com/build-your-first-hadoop-project-maven/) for maven + hadoop.
+
+## Unit tests
+- Use [MRUnit](https://mrunit.apache.org/) ([tutorials](https://cwiki.apache.org/confluence/display/MRUNIT/MRUnit+Tutorial)).
