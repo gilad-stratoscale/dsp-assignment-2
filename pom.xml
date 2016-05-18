@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>dsp-assignment-2-local</module>
+        <module>dsp-assignment-2-mapreduce</module>
     </modules>
 
 
