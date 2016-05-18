@@ -21,4 +21,4 @@ We are currentyly based on [hadoop official tutorial](https://hadoop.apache.org/
 and a [tikal tutorial](http://www.tikalk.com/build-your-first-hadoop-project-maven/) for maven + hadoop.
 
 ## Unit tests
-- Read hadoop [unit tests guide](https://wiki.apache.org/hadoop/HowToDevelopUnitTests)
+- Use [MRUnit](https://mrunit.apache.org/) ([tutorials](https://cwiki.apache.org/confluence/display/MRUNIT/MRUnit+Tutorial)).
