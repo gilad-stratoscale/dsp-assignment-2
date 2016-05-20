@@ -24,15 +24,20 @@ public class TestMapReduce {
 
 	@Test
 	public void testMapReduce() throws IOException {
+		addInput("abc abc ggg xxx xxx");
+		addInput("abc abc ggg xxx xxx");
+
+		mapReduceDriver.withOutput(new Text("abc ggg"), new IntWritable(4));
+		mapReduceDriver.withOutput(new Text("ggg xxx"), new IntWritable(4));
+
+		mapReduceDriver.runTest();
+	}
+
+	private void addInput(String text) {
 		mapReduceDriver.withInput(
 				new Text(),// Just for serialization...
 				new Text(
-						"abc abc ggg xxx xxx"
+						text
 				));
-
-		mapReduceDriver.withOutput(new Text("abc ggg"), new IntWritable(2));
-		mapReduceDriver.withOutput(new Text("ggg xxx"), new IntWritable(2));
-
-		mapReduceDriver.runTest();
 	}
 }
