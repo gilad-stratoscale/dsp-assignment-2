@@ -11,13 +11,13 @@ import java.io.IOException;
 
 public class TestMapReduce {
 
-	private MapReduceDriver<Object, Text, Text, IntWritable,Text,IntWritable> mapReduceDriver;
+	private MapReduceDriver<Object, Text, Text, IntWritable, Text, IntWritable> mapReduceDriver;
 
 	@Before
 	public void setUp() {
 		TokenizerMapper mapper = new TokenizerMapper();
 
-		Reducer<Text,IntWritable,Text,IntWritable> reducer = new IntSumReducer();
+		Reducer<Text, IntWritable, Text, IntWritable> reducer = new IntSumReducer();
 
 		mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper, reducer);
 	}

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestIntSumReducer {
-	private ReduceDriver<Text,IntWritable,Text,IntWritable> reduceDriver;
+	private ReduceDriver<Text, IntWritable, Text, IntWritable> reduceDriver;
 
 	@Before
 	public void setUp() {
-		Reducer<Text,IntWritable,Text,IntWritable> reducer = new IntSumReducer();
+		Reducer<Text, IntWritable, Text, IntWritable> reducer = new IntSumReducer();
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
