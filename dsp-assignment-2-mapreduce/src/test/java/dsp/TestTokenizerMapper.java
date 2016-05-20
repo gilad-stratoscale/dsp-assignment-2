@@ -79,4 +79,14 @@ public class TestTokenizerMapper {
 		Assert.assertTrue(twoGrams.contains("ccc eee"));
 	}
 
+	@Test
+	public void testRemoveStopWords() {
+		Assert.assertEquals("extract pairs", mapper.removeStopWords("extract pairs of words"));
+		Assert.assertEquals("", mapper.removeStopWords(""));
+		Assert.assertEquals(
+				"extract pairs extract pairs extract pairs",
+				mapper.removeStopWords("extract pairs extract pairs extract pairs"));
+
+	}
+
 }

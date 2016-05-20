@@ -5,15 +5,16 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TokenizerMapper
 		extends Mapper<Object, Text, Text, IntWritable> {
 
 	private final static IntWritable one = new IntWritable(1);
-	private Text word = new Text();
 	private StopWordsFilter filter = new StopWordsFilter();
 
 	@Override
@@ -23,12 +24,26 @@ public class TokenizerMapper
 			return;
 		}
 
-		List<String> strings = ngramTo2gram(value.toString());
+		String withoutStopWords = removeStopWords(value.toString());
+
+		List<String> strings = ngramTo2gram(withoutStopWords);
 
 		for (String twoGram : strings) {
 			context.write(new Text(twoGram), one);
 		}
 
+	}
+
+	/**
+	 * Remove all the stop words from the string
+	 * Assumes that the string has exactly single space between each 2 words
+	 */
+	String removeStopWords(String s) {
+		String[] split = s.split(" ");
+		String res = Arrays.stream(split).filter((String x) -> !filter.shouldFilter(x)).
+				collect(Collectors.joining(" "));
+
+		return res;
 	}
 
 	/**

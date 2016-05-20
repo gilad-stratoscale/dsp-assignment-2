@@ -26,8 +26,10 @@ public class TestMapReduce {
 	public void testMapReduce() throws IOException {
 		addInput("abc abc ggg xxx xxx");
 		addInput("abc abc ggg xxx xxx");
+		addInput("extract pairs of words");
 
 		mapReduceDriver.withOutput(new Text("abc ggg"), new IntWritable(4));
+		mapReduceDriver.withOutput(new Text("extract pairs"), new IntWritable(1));
 		mapReduceDriver.withOutput(new Text("ggg xxx"), new IntWritable(4));
 
 		mapReduceDriver.runTest();
