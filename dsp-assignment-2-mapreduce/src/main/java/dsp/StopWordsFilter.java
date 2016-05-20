@@ -11,7 +11,7 @@ public class StopWordsFilter {
 
 	}
 
-	public booljean shouldFilter(String word) {
+	public boolean shouldFilter(String word) {
 		return stopWords.contains(word);
 	}
 
