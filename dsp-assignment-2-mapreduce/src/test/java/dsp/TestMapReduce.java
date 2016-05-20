@@ -27,14 +27,11 @@ public class TestMapReduce {
 		mapReduceDriver.withInput(
 				new Text(),// Just for serialization...
 				new Text(
-						"abc abc ggg xxx\n" +
-								"xxx ccc"
+						"abc abc ggg xxx xxx"
 				));
 
-		mapReduceDriver.withOutput(new Text("abc"), new IntWritable(2));
-		mapReduceDriver.withOutput(new Text("ccc"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("ggg"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("xxx"), new IntWritable(2));
+		mapReduceDriver.withOutput(new Text("abc ggg"), new IntWritable(2));
+		mapReduceDriver.withOutput(new Text("ggg xxx"), new IntWritable(2));
 
 		mapReduceDriver.runTest();
 	}

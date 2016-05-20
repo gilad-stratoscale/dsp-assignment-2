@@ -22,8 +22,8 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testMapper() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("abc"));
-		mapDriver.withOutput(new Text("abc"), new IntWritable(1));
+		mapDriver.withInput(new IntWritable(1), new Text("abc abc"));
+		mapDriver.withOutput(new Text("abc abc"), new IntWritable(1));
 		mapDriver.runTest();
 	}
 
