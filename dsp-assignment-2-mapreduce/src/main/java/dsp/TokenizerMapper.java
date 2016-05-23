@@ -23,9 +23,8 @@ public class TokenizerMapper
 		if (value.toString().split(" ").length < 0) {
 			return;
 		}
-
-		String withoutStopWords = removeStopWords(value.toString());
-
+        String withoutPunctuationAndNumbers = removePunctuationAndNumbers(value.toString());
+		String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers.toString());
 		List<String> strings = ngramTo2gram(withoutStopWords);
 
 		for (String twoGram : strings) {
@@ -34,7 +33,12 @@ public class TokenizerMapper
 
 	}
 
-	/**
+    public String removePunctuationAndNumbers (String s) {
+        return s.replaceAll("[']","").replaceAll("[,]"," ").replaceAll("[^A-Za-z\\s]","");
+    }
+
+
+    /**
 	 * Remove all the stop words from the string
 	 * Assumes that the string has exactly single space between each 2 words
 	 */

@@ -89,4 +89,25 @@ public class TestTokenizerMapper {
 
 	}
 
+    @Test
+    public void testPunctuationAndNumbers() {
+        Assert.assertEquals("passwrd", mapper.removePunctuationAndNumbers("passw0rd"));
+        Assert.assertEquals("a b c", mapper.removePunctuationAndNumbers("a,b,c"));
+        Assert.assertEquals("number cant", mapper.removePunctuationAndNumbers("number1,can't"));
+    }
+
+    @Test
+    public void testFiveGramWithPunctuationNumbersAndStopWords() {
+        String withoutPunctuationAndNumbers = mapper.removePunctuationAndNumbers("a1a2a bbb,cc3c d'd'd,eee");
+        String withoutStopWords = mapper.removeStopWords(withoutPunctuationAndNumbers.toString());
+        List<String> twoGrams = mapper.ngramTo2gram(withoutStopWords);
+
+        Assert.assertEquals(4, twoGrams.size());
+
+        Assert.assertTrue(twoGrams.contains("aaa ccc"));
+        Assert.assertTrue(twoGrams.contains("bbb ccc"));
+        Assert.assertTrue(twoGrams.contains("ccc ddd"));
+        Assert.assertTrue(twoGrams.contains("ccc eee"));
+    }
+
 }
