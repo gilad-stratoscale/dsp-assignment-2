@@ -98,7 +98,7 @@ public class TestTokenizerMapper {
 
     @Test
     public void testFiveGramWithPunctuationNumbersAndStopWords() {
-        String withoutPunctuationAndNumbers = mapper.removePunctuationAndNumbers("a1a2a bbb,cc3c d'd'd,eee");
+        String withoutPunctuationAndNumbers = mapper.removePunctuationAndNumbers("and a1a2a bbb,cc3c of d'd'd,eee");
         String withoutStopWords = mapper.removeStopWords(withoutPunctuationAndNumbers.toString());
         List<String> twoGrams = mapper.ngramTo2gram(withoutStopWords);
 
