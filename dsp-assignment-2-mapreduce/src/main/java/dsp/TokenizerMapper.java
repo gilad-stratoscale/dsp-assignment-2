@@ -22,7 +22,7 @@ public class TokenizerMapper
 			throws IOException, InterruptedException {
 
 		String[] splits = value.toString().split("\t");
-		String ngram = splits[1];
+		String ngram = splits[1].toLowerCase();
 
 		// TODO what we do with the decade? it should be the key?
 		int decade = getDecade(splits[2]);
