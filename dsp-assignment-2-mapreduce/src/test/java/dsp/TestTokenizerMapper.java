@@ -22,8 +22,15 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testMapper() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("abc abc"));
-		mapDriver.withOutput(new Text("abc abc"), new IntWritable(1));
+		mapDriver.withInput(new IntWritable(1), new Text("500\t\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
+		mapDriver.runTest();
+	}
+
+	@Test
+	public void testMapper2() throws IOException {
+		mapDriver.withInput(new IntWritable(1), new Text("75500\t\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
+		mapDriver.withOutput(new Text("During final"),new IntWritable(1));
+		mapDriver.withOutput(new Text("final stages"),new IntWritable(1));
 		mapDriver.runTest();
 	}
 
@@ -109,5 +116,12 @@ public class TestTokenizerMapper {
         Assert.assertTrue(twoGrams.contains("ccc ddd"));
         Assert.assertTrue(twoGrams.contains("ccc eee"));
     }
+
+	@Test
+	public void testGetDecade() {
+		Assert.assertEquals(1970, mapper.getDecade("1979"));
+		Assert.assertEquals(1970, mapper.getDecade("1975"));
+		Assert.assertEquals(1970, mapper.getDecade("1970"));
+	}
 
 }

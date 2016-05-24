@@ -18,23 +18,39 @@ public class TokenizerMapper
 	private StopWordsFilter filter = new StopWordsFilter();
 
 	@Override
-	public void map(Object key, Text value, Context context
-	) throws IOException, InterruptedException {
-		if (value.toString().split(" ").length < 0) {
+	public void map(Object key, Text value, Context context)
+			throws IOException, InterruptedException {
+
+		String[] splits = value.toString().split("\t");
+		String ngram = splits[1];
+
+		// TODO what we do with the decade? it should be the key?
+		int decade = getDecade(splits[2]);
+
+		if (ngram.split(" ").length < 0) {
 			return;
 		}
-        String withoutPunctuationAndNumbers = removePunctuationAndNumbers(value.toString());
-		String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers.toString());
-		List<String> strings = ngramTo2gram(withoutStopWords);
 
-		for (String twoGram : strings) {
+        String withoutPunctuationAndNumbers = removePunctuationAndNumbers(ngram);
+		String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers);
+		List<String> twoGrams = ngramTo2gram(withoutStopWords);
+
+		for (String twoGram : twoGrams) {
 			context.write(new Text(twoGram), one);
 		}
 
 	}
 
-    public String removePunctuationAndNumbers (String s) {
-        return s.replaceAll("[']","").replaceAll("[,]"," ").replaceAll("[^A-Za-z\\s]","");
+	/**
+	 * Return the decade of a year
+	 */
+	int getDecade(String year) {
+		int yearInt = Integer.parseInt(year);
+		return yearInt - (yearInt % 10);
+	}
+
+	public String removePunctuationAndNumbers (String s) {
+        return s.replaceAll("[']","").replaceAll("[,]"," ").replaceAll("[^A-Za-z\\s]","").trim();
     }
 
 
@@ -87,7 +103,7 @@ public class TokenizerMapper
 	 */
 	String sort2gram(String twoGram) {
 		String[] split = twoGram.split(" ");
-		assert split.length == 2;
+		assert split.length == 2 : "split.length is " + split.length;
 		if (split[0].compareTo(split[1]) < 0) {
 			return split[0] + " " + split[1];
 		} else {
