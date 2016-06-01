@@ -22,3 +22,14 @@ and a [tikal tutorial](http://www.tikalk.com/build-your-first-hadoop-project-mav
 
 ## Unit tests
 - Use [MRUnit](https://mrunit.apache.org/) ([tutorials](https://cwiki.apache.org/confluence/display/MRUNIT/MRUnit+Tutorial)).
+
+## Map-reduce steps
+The map reduce steps are as follows:
+1. Split the n-grams into 2-grams
+2. Simple word count app to count how many times each word and each 2-gram appears in each decade
+3. grouping of each 2-gram count with its first word count, i.e. for the 2-gram "map reduce", we will write the result
+"map,<map-count>,map reduce,<map-reduce-count" with the key "reduce".
+In addition, in this step we will write each single word with its own count, i.e. for the word "map" we will write
+"map,<map-count>" with "map" as a key
+4. final calculation: Now we will get in the reducer, for the 2gram "map reduce" the count of "map", the count of
+"reduce" and the count of "map reduce", so we are ready to caculate the PMI, and this is what we will do in this part.
