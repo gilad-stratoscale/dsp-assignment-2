@@ -30,6 +30,8 @@ public class TestTokenizerMapper {
 	public void testMapper2() throws IOException {
 		mapDriver.withInput(new IntWritable(1), new Text("75500\t\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
 		mapDriver.withOutput(new Text("final stages"),new IntWritable(1));
+		mapDriver.withOutput(new Text("final"),new IntWritable(1));
+		mapDriver.withOutput(new Text("stages"),new IntWritable(1));
 		mapDriver.runTest();
 	}
 
@@ -37,7 +39,11 @@ public class TestTokenizerMapper {
 	public void testMapper3() throws IOException {
 		mapDriver.withInput(new IntWritable(1), new Text("377500\t' leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.withOutput(new Text("leaves open"),new IntWritable(1));
+		mapDriver.withOutput(new Text("leaves"),new IntWritable(1));
+		mapDriver.withOutput(new Text("open"),new IntWritable(1));
 		mapDriver.withOutput(new Text("open possibility"),new IntWritable(1));
+		mapDriver.withOutput(new Text("open"),new IntWritable(1));
+		mapDriver.withOutput(new Text("possibility"),new IntWritable(1));
 		mapDriver.runTest();
 	}
 

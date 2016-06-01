@@ -3,6 +3,7 @@ package dsp;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -16,10 +17,13 @@ public class TokenizerMapper
 
 	private final static IntWritable one = new IntWritable(1);
 	private StopWordsFilter filter = new StopWordsFilter();
+	final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
 	@Override
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
+
+		logger.debug("Got key=\n" + key + "\nValue=\n" + value.toString());
 
 		String[] splits = value.toString().split("\t");
 		String ngram = splits[1].toLowerCase();
@@ -33,10 +37,20 @@ public class TokenizerMapper
 
         String withoutPunctuationAndNumbers = removePunctuationAndNumbers(ngram);
 		String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers);
-		List<String> twoGrams = ngramTo2gram(withoutStopWords);
+
+		if (withoutStopWords.length() == 0) {
+			return;
+		}
+
+		// Due to removing punctuation, numbers and stopwords there might be a situation in which
+		// there are 2 spaces in a row
+		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ");
+		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
 
 		for (String twoGram : twoGrams) {
 			context.write(new Text(twoGram), one);
+			context.write(new Text(twoGram.split(" ")[0]), one);
+			context.write(new Text(twoGram.split(" ")[1]), one);
 		}
 
 	}
