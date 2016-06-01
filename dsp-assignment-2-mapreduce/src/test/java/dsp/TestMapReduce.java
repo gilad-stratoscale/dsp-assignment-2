@@ -27,14 +27,14 @@ public class TestMapReduce {
 		addInput("377500\t' leaves open the possibility\t1981\t4\t4\t3");
 		addInput("75500\t\"\"\" During the final stages\"\t1994\t3\t3\t3\n");
 		addInput("500\t\"! \"\" \"\" It ought\"\t1893\t1\t1\t1");
-		mapReduceDriver.withOutput(new Text("final"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("final stages"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("leaves"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("leaves open"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("open"), new IntWritable(2));
-		mapReduceDriver.withOutput(new Text("open possibility"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("possibility"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("stages"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1980,leaves"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1980,leaves open"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1980,open"), new IntWritable(2));
+		mapReduceDriver.withOutput(new Text("1980,open possibility"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1980,possibility"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1990,final"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1990,final stages"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1990,stages"), new IntWritable(1));
 
 		mapReduceDriver.runTest();
 	}
@@ -45,9 +45,9 @@ public class TestMapReduce {
 	@Test
 	public void testMapReduceRegression() throws IOException {
 		addInput("46000\t\"\"\" 2 Cor . iv\"\t1900\t2\t2\t2");
-		mapReduceDriver.withOutput(new Text("cor"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("cor iv"), new IntWritable(1));
-		mapReduceDriver.withOutput(new Text("iv"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1900,cor"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1900,cor iv"), new IntWritable(1));
+		mapReduceDriver.withOutput(new Text("1900,iv"), new IntWritable(1));
 		mapReduceDriver.runTest();
 	}
 

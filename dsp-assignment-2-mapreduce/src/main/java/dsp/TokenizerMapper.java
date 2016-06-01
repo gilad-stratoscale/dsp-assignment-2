@@ -48,9 +48,9 @@ public class TokenizerMapper
 		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
 
 		for (String twoGram : twoGrams) {
-			context.write(new Text(twoGram), one);
-			context.write(new Text(twoGram.split(" ")[0]), one);
-			context.write(new Text(twoGram.split(" ")[1]), one);
+			context.write(new Text(decade + "," + twoGram), one);
+			context.write(new Text(decade + "," + twoGram.split(" ")[0]), one);
+			context.write(new Text(decade + "," + twoGram.split(" ")[1]), one);
 		}
 
 	}
