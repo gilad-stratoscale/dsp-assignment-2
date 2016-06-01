@@ -11,17 +11,20 @@ public class Stage3Mapper extends Mapper<Object, Text, Text, Text> {
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 
-		if (value.toString().contains(" ")) {
+		String decade = value.toString().split("\t")[0];
+		String ngram = value.toString().split("\t")[1];
+
+		if (ngram.contains(" ")) {
 			// This is a 2-gram
 			context.write(
 					// the key is the first word followed by the '+' sign
-					new Text(value.toString().split(",")[0].split(" ")[0] + " +"),
+					new Text(decade + "\t" + ngram.split(" ")[0] + " +"),
 					value);
 		}
 		else {
 			// This is a single word
 			context.write(
-					new Text(value.toString().split(",")[0] + " *"), value);
+					new Text(decade + "\t" + ngram + " *"), value);
 		}
 	}
 

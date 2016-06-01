@@ -28,18 +28,23 @@ public class Stage3ReducerTest {
 	public void reduce() throws IOException {
 
 		List<Text> firstList = new LinkedList<>();
-		Text firstKey = new Text("good,2");
+		String seperator = "\t";
+		Text firstKey = new Text("1990" + seperator + "good" + seperator + "2");
 		firstList.add(firstKey);
-		reduceDriver.withInput(new Text("good *"), firstList);
+		reduceDriver.withInput(new Text("1990" + seperator + "good *"), firstList);
 
 		List<Text> values = new LinkedList<>();
-		values.add(new Text("good boy,3"));
-		values.add(new Text("good girl,4"));
+		values.add(new Text("1990" + seperator + "good boy" + seperator + "3"));
+		values.add(new Text("1990" + seperator + "good girl" + seperator + "4"));
 		reduceDriver.withInput(new Text("good"),values);
 
-		reduceDriver.withOutput(new Text("good"), new Text("good,2"));
-		reduceDriver.withOutput(new Text("boy"), new Text("good boy,3,good,2"));
-		reduceDriver.withOutput(new Text("girl"), new Text("good girl,4,good,2"));
+		reduceDriver.withOutput(new Text("1990" + seperator + "good"), new Text("1990" + seperator + "good" + seperator + "2"));
+		reduceDriver.withOutput(
+				new Text("1990" + seperator + "boy"),
+				new Text("1990" + seperator + "good boy" + seperator + "3" + seperator + "good" + seperator + "2"));
+		reduceDriver.withOutput(
+				new Text("1990" + seperator + "girl"),
+				new Text("1990" + seperator + "good girl" + seperator + "4" + seperator + "good" + seperator + "2"));
 		reduceDriver.runTest();
 	}
 

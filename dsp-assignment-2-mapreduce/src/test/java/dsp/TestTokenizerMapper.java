@@ -29,21 +29,21 @@ public class TestTokenizerMapper {
 	@Test
 	public void testMapper2() throws IOException {
 		mapDriver.withInput(new IntWritable(1), new Text("75500\t\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
-		mapDriver.withOutput(new Text("1990,final stages"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1990,final"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1990,stages"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1990\tfinal stages"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1990\tfinal"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1990\tstages"),new IntWritable(1));
 		mapDriver.runTest();
 	}
 
 	@Test
 	public void testMapper3() throws IOException {
 		mapDriver.withInput(new IntWritable(1), new Text("377500\t' leaves open the possibility\t1981\t4\t4\t3"));
-		mapDriver.withOutput(new Text("1980,leaves open"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1980,leaves"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1980,open"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1980,open possibility"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1980,open"),new IntWritable(1));
-		mapDriver.withOutput(new Text("1980,possibility"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\tleaves open"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\tleaves"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\topen"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\topen possibility"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\topen"),new IntWritable(1));
+		mapDriver.withOutput(new Text("1980\tpossibility"),new IntWritable(1));
 		mapDriver.runTest();
 	}
 
@@ -119,7 +119,7 @@ public class TestTokenizerMapper {
     @Test
     public void testFiveGramWithPunctuationNumbersAndStopWords() {
         String withoutPunctuationAndNumbers = mapper.removePunctuationAndNumbers("and a1a2a bbb,cc3c of d'd'd,eee");
-        String withoutStopWords = mapper.removeStopWords(withoutPunctuationAndNumbers.toString());
+        String withoutStopWords = mapper.removeStopWords(withoutPunctuationAndNumbers);
         List<String> twoGrams = mapper.ngramTo2gram(withoutStopWords);
 
         Assert.assertEquals(4, twoGrams.size());

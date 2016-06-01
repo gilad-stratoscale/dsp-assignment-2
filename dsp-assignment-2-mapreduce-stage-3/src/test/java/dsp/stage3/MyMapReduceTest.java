@@ -23,23 +23,32 @@ public class MyMapReduceTest {
 	@Test
 	public void testMapReduce() throws IOException {
 
-		mapReduceDriver.withInput(new Text(), new Text("abc def,1"));
-		mapReduceDriver.withInput(new Text(), new Text("abc,2"));
-		mapReduceDriver.withInput(new Text(), new Text("abc xyz,1"));
+		mapReduceDriver.withInput(new Text(), new Text("2000\tabc def\t1"));
+		mapReduceDriver.withInput(new Text(), new Text("2000\tdef\t1"));
+		mapReduceDriver.withInput(new Text(), new Text("2000\tabc\t2"));
+		mapReduceDriver.withInput(new Text(), new Text("2000\tabc xyz\t1"));
+		mapReduceDriver.withInput(new Text(), new Text("2000\txyz\t1"));
 
-		mapReduceDriver.withInput(new Text(), new Text("aaa bbb,3"));
-		mapReduceDriver.withInput(new Text(), new Text("aaa ccc,2"));
-		mapReduceDriver.withInput(new Text(), new Text("aaa,5"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\taaa bbb\t3"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\tbbb\t3"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\taaa ccc\t2"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\tccc\t2"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\taaa\t5"));
 
-		mapReduceDriver.withOutput(new Text("aaa"), new Text("aaa,5"));
+		mapReduceDriver.withOutput(new Text("1990\taaa"), new Text("1990\taaa\t5"));
 
-		mapReduceDriver.withOutput(new Text("bbb"), new Text("aaa bbb,3,aaa,5"));
-		mapReduceDriver.withOutput(new Text("ccc"), new Text("aaa ccc,2,aaa,5"));
+		mapReduceDriver.withOutput(new Text("1990\tbbb"), new Text("1990\taaa bbb\t3\taaa\t5"));
+		mapReduceDriver.withOutput(new Text("1990\tccc"), new Text("1990\taaa ccc\t2\taaa\t5"));
 
-		mapReduceDriver.withOutput(new Text("abc"), new Text("abc,2"));
+		mapReduceDriver.withOutput(new Text("1990\tbbb"), new Text("1990\tbbb\t3"));
+		mapReduceDriver.withOutput(new Text("1990\tccc"), new Text("1990\tccc\t2"));
 
-		mapReduceDriver.withOutput(new Text("def"), new Text("abc def,1,abc,2"));
-		mapReduceDriver.withOutput(new Text("xyz"), new Text("abc xyz,1,abc,2"));
+		mapReduceDriver.withOutput(new Text("2000\tabc"), new Text("2000\tabc\t2"));
+
+		mapReduceDriver.withOutput(new Text("2000\tdef"), new Text("2000\tabc def\t1\tabc\t2"));
+		mapReduceDriver.withOutput(new Text("2000\txyz"), new Text("2000\tabc xyz\t1\tabc\t2"));
+		mapReduceDriver.withOutput(new Text("2000\tdef"), new Text("2000\tdef\t1"));
+		mapReduceDriver.withOutput(new Text("2000\txyz"), new Text("2000\txyz\t1"));
 
 		mapReduceDriver.runTest();
 	}

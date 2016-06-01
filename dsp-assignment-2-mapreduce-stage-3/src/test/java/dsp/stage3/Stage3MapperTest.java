@@ -22,8 +22,8 @@ public class Stage3MapperTest {
 	public void testMapperWithSingleWord() throws IOException {
 		mapDriver.withInput(
 				new Text(),
-				new Text("abc,5"));
-		mapDriver.withOutput(new Text("abc *"), new Text("abc,5"));
+				new Text("2000\tabc\t5"));
+		mapDriver.withOutput(new Text("2000\tabc *"), new Text("2000\tabc\t5"));
 
 		mapDriver.runTest();
 	}
@@ -32,8 +32,8 @@ public class Stage3MapperTest {
 	public void testMapperWithTwoGram() throws IOException {
 		mapDriver.withInput(
 				new Text(),
-				new Text("abc def,5"));
-		mapDriver.withOutput(new Text("abc +"), new Text("abc def,5"));
+				new Text("2000\tabc def\t5"));
+		mapDriver.withOutput(new Text("2000\tabc +"), new Text("2000\tabc def\t5"));
 
 		mapDriver.runTest();
 	}
