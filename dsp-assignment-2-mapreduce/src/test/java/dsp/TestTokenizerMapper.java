@@ -22,13 +22,13 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testMapper() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("500\t\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
+		mapDriver.withInput(new IntWritable(1), new Text("\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
 		mapDriver.runTest();
 	}
 
 	@Test
 	public void testMapper2() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("75500\t\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
+		mapDriver.withInput(new IntWritable(1), new Text("\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
 		mapDriver.withOutput(new Text("1990\tfinal stages"),new IntWritable(1));
 		mapDriver.withOutput(new Text("1990\tfinal"),new IntWritable(1));
 		mapDriver.withOutput(new Text("1990\tstages"),new IntWritable(1));
@@ -37,7 +37,7 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testMapper3() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("377500\t' leaves open the possibility\t1981\t4\t4\t3"));
+		mapDriver.withInput(new IntWritable(1), new Text("' leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.withOutput(new Text("1980\tleaves open"),new IntWritable(1));
 		mapDriver.withOutput(new Text("1980\tleaves"),new IntWritable(1));
 		mapDriver.withOutput(new Text("1980\topen"),new IntWritable(1));
