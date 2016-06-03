@@ -26,10 +26,10 @@ public class TokenizerMapper
 		logger.debug("Got key=\n" + key + "\nValue=\n" + value.toString());
 
 		String[] splits = value.toString().split("\t");
-		String ngram = splits[1].toLowerCase();
+		String ngram = splits[0].toLowerCase();
 
 		// TODO what we do with the decade? it should be the key?
-		int decade = getDecade(splits[2]);
+		int decade = getDecade(splits[1]);
 
 		if (ngram.split(" ").length < 0) {
 			return;
