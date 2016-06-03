@@ -137,4 +137,23 @@ public class TestTokenizerMapper {
 		Assert.assertEquals(1970, mapper.getDecade("1970"));
 	}
 
+	@Test
+	public void regressionTestSpaces() throws IOException {
+		/* Here, the only non stopword non punctuation is united, so expect empty output
+		 * Before, there was a bug that left spaces of punctuation, so " united" was splitted to
+		 * 2 words - "" and "united" and thus was considered a 2gram
+		 */
+
+		String value = "! Re - united to\t1950\t3\t3\t3";
+		String key = "13000";
+
+		mapDriver.
+				withInput(
+						new Text(key),
+						new Text(value));
+		mapDriver.runTest();
+
+	}
+
+
 }
