@@ -1,11 +1,11 @@
-package dsp.stage3;
+package dsp.stage2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 
-public class Stage3Reducer extends Reducer<Text, Text, Text, Text>  {
+public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 
 	private String currentWord = null;
 	private String currentDecade = null;

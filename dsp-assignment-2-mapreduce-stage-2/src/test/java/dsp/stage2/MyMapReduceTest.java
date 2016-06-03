@@ -1,4 +1,4 @@
-package dsp.stage3;
+package dsp.stage2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -13,9 +13,9 @@ public class MyMapReduceTest {
 
 	@Before
 	public void setUp() {
-		Stage3Mapper mapper = new Stage3Mapper();
+		Stage2Mapper mapper = new Stage2Mapper();
 
-		Reducer<Text, Text, Text, Text> reducer = new Stage3Reducer();
+		Reducer<Text, Text, Text, Text> reducer = new Stage2Reducer();
 
 		mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper, reducer);
 	}

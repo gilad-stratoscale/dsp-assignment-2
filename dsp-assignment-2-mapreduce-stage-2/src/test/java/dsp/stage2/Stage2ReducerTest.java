@@ -1,4 +1,4 @@
-package dsp.stage3;
+package dsp.stage2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * Created by hagai_lvi on 31/05/2016.
  */
-public class Stage3ReducerTest {
+public class Stage2ReducerTest {
 
 	private ReduceDriver<Text, Text, Text, Text> reduceDriver;
 
 	@Before
 	public void setUp() {
-		Reducer<Text, Text, Text, Text> reducer = new Stage3Reducer();
+		Reducer<Text, Text, Text, Text> reducer = new Stage2Reducer();
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
@@ -50,22 +50,22 @@ public class Stage3ReducerTest {
 
 	@Test
 	public void inverseTwoGram() throws Exception {
-		Assert.assertEquals("def abc", Stage3Reducer.inverseTwoGram("abc def"));
+		Assert.assertEquals("def abc", Stage2Reducer.inverseTwoGram("abc def"));
 	}
 
 	@Test(expected = AssertionError.class)
 	public void inverseTwoGramThrowException() throws Exception {
-		Stage3Reducer.inverseTwoGram("");
+		Stage2Reducer.inverseTwoGram("");
 	}
 
 	@Test(expected = AssertionError.class)
 	public void inverseTwoGramThrowException2() throws Exception {
-		Stage3Reducer.inverseTwoGram("abc");
+		Stage2Reducer.inverseTwoGram("abc");
 	}
 
 	@Test(expected = AssertionError.class)
 	public void inverseTwoGramThrowException3() throws Exception {
-		Stage3Reducer.inverseTwoGram("abc def ghi");
+		Stage2Reducer.inverseTwoGram("abc def ghi");
 	}
 
 }

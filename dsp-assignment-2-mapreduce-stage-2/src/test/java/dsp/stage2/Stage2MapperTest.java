@@ -1,4 +1,4 @@
-package dsp.stage3;
+package dsp.stage2;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
@@ -7,14 +7,14 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-public class Stage3MapperTest {
+public class Stage2MapperTest {
 
 	private MapDriver<Object, Text, Text, Text>  mapDriver;
-	private Stage3Mapper mapper;
+	private Stage2Mapper mapper;
 
 	@Before
 	public void setUp() {
-		mapper = new Stage3Mapper();
+		mapper = new Stage2Mapper();
 		mapDriver = MapDriver.newMapDriver(mapper);
 	}
 

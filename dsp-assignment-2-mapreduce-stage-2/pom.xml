@@ -30,7 +30,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>dsp.stage3.Stage3</mainClass>
+                            <mainClass>dsp.stage2.Stage2</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
