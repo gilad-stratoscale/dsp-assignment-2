@@ -44,7 +44,7 @@ public class TokenizerMapper
 
 		// Due to removing punctuation, numbers and stopwords there might be a situation in which
 		// there are 2 spaces in a row
-		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ");
+		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ").trim();
 		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
 
 		for (String twoGram : twoGrams) {
