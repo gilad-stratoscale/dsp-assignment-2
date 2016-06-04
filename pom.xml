@@ -12,6 +12,7 @@
         <module>dsp-assignment-2-local</module>
         <module>dsp-assignment-2-mapreduce</module>
         <module>dsp-assignment-2-mapreduce-stage-2</module>
+        <module>dsp-assignment-2-mapreduce-stage-3</module>
     </modules>
 
     <build>
