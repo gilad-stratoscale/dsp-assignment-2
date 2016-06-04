@@ -101,7 +101,7 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testRemoveStopWords() {
-		Assert.assertEquals("extract pairs", mapper.removeStopWords("extract pairs of words"));
+		Assert.assertEquals("extract pairs words", mapper.removeStopWords("extract pairs of words"));
 		Assert.assertEquals("", mapper.removeStopWords(""));
 		Assert.assertEquals(
 				"extract pairs extract pairs extract pairs",
@@ -144,7 +144,7 @@ public class TestTokenizerMapper {
 		 * 2 words - "" and "united" and thus was considered a 2gram
 		 */
 
-		String value = "! Re - united to\t1950\t3\t3\t3";
+		String value = "! then - united to\t1950\t3\t3\t3";
 		String key = "13000";
 
 		mapDriver.
