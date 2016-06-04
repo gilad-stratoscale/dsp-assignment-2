@@ -27,6 +27,12 @@ public class WordCount {
 
 		FileInputFormat.addInputPath(job, new Path(args[0]));
 		FileOutputFormat.setOutputPath(job, new Path(args[1]));
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+		boolean success = job.waitForCompletion(true);
+
+		System.out.println("Got " +
+				job.getCounters().findCounter(TokenizerMapper.WordCounter.WORD).getValue() +
+				" words in total");
+
+		System.exit(success ? 0 : 1);
 	}
 }

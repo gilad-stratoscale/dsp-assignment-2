@@ -19,6 +19,10 @@ public class TokenizerMapper
 	private StopWordsFilter filter = new StopWordsFilter();
 	final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
+	static enum WordCounter {
+		WORD
+	};
+
 	@Override
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
@@ -27,6 +31,8 @@ public class TokenizerMapper
 
 		String[] splits = value.toString().split("\t");
 		String ngram = splits[0].toLowerCase();
+
+		incrementWordCounter(context, ngram);
 
 		// TODO what we do with the decade? it should be the key?
 		int decade = getDecade(splits[1]);
@@ -53,6 +59,10 @@ public class TokenizerMapper
 			context.write(new Text(decade + "\t" + twoGram.split(" ")[1]), one);
 		}
 
+	}
+
+	private void incrementWordCounter(Context context, String ngram) {
+		context.getCounter(WordCounter.WORD).increment(ngram.split(" ").length);
 	}
 
 	/**
