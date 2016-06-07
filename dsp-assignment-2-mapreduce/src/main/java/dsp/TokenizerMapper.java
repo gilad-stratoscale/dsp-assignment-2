@@ -19,9 +19,6 @@ public class TokenizerMapper
 	private StopWordsFilter filter = new StopWordsFilter();
 	final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
-	static enum WordCounter {
-		WORD
-	};
 
 	@Override
 	public void map(Object key, Text value, Context context)
@@ -62,7 +59,7 @@ public class TokenizerMapper
 	}
 
 	private void incrementWordCounter(Context context, String ngram) {
-		context.getCounter(WordCounter.WORD).increment(ngram.split(" ").length);
+		context.getCounter(Constants.WordCounter.WORD).increment(ngram.split(" ").length);
 	}
 
 	/**
@@ -74,7 +71,7 @@ public class TokenizerMapper
 	}
 
 	public String removePunctuationAndNumbers (String s) {
-        return s.replaceAll("[']","").replaceAll("[,]"," ").replaceAll("[^A-Za-z\\s]","").trim();
+        return s.replaceAll("[']","").replaceAll("[,-]"," ").replaceAll("[^A-Za-z\\s]","").trim();
     }
 
 
