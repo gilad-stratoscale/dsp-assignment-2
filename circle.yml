@@ -4,7 +4,7 @@ machine:
 
 dependencies:
   override:
-    - : # noop
+    - echo "" # noop
 
 test:
   override:
