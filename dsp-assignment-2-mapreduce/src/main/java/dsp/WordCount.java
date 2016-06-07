@@ -14,17 +14,24 @@ import java.io.IOException;
 
 public class WordCount implements MapReduceTask {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
         boolean success;
-        Configuration conf = new Configuration();
-        WordCount wc = new WordCount();
-        Job job = wc.getJob(conf, new Path(args[0]),new Path(args[1]),"word count");
-        success = job.waitForCompletion(true);
+        try {
+            Configuration conf = new Configuration();
+            WordCount wc = new WordCount();
+            Job job = wc.getJob(conf, new Path(args[0]),new Path(args[1]),"word count");
+            success = job.waitForCompletion(true);
 
-        System.out.println("Got " +
-                job.getCounters().findCounter(Constants.WordCounter.WORD).getValue() +
-                " words in total");
-		System.exit(success ? 0 : 1);
+            System.out.println("Got " +
+                    job.getCounters().findCounter(Constants.WordCounter.WORD).getValue() +
+                    " words in total");
+            System.exit(success ? 0 : 1);
+        }
+        catch (Exception e) {
+            e.printStackTrace(System.err);
+            System.exit(1);
+        }
+
 	}
 
     public Job getJob(Configuration conf, Path inputPath, Path outputPath, String jobName) throws IOException {

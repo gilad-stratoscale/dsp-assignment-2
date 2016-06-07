@@ -45,8 +45,9 @@ public class All {
             //jobControl.addJob(cj1);
 
 // <debug>
+            boolean success=false;
             try {
-                wordCountJob.waitForCompletion(true);
+                success = wordCountJob.waitForCompletion(true);
             }
             catch (InterruptedException | ClassNotFoundException e) {
                 e.printStackTrace(System.err);
@@ -54,7 +55,7 @@ public class All {
             }
 
             System.out.println("finished");
-            System.exit(0);
+            System.exit(success ? 1 : 0);
 // </debug>
             //       jobControl.addJob(cj2);
     //        jobControl.addJob(cj3);
