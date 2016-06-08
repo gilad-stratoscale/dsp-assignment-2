@@ -18,6 +18,7 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 	@Override
 	public void reduce(Text key, Iterable<Text> values,Context context) throws IOException, InterruptedException {
+
 		for (Text value : values) {
 			String seperator = "\t";
 			String decade = value.toString().split(seperator)[0];
@@ -43,11 +44,13 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 			String word2 = value.toString().split(seperator)[3];
 			String count2 = value.toString().split(seperator)[4];
 
+			int totalWords = 27982;// TODO
 			String valueToEmit = String.join(
 					Stage3Mapper.SEPERATOR, decade,
 					words, Integer.toString(count),
 					currentWord, Integer.toString(currentKeyCount),
-					word2, count2);
+					word2, count2,
+					Double.toString(calcPmi(count, Integer.parseInt(count2), currentKeyCount, totalWords)));
 
 			context.write(
 					new Text(decade + seperator + words),
@@ -63,5 +66,9 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 		currentDecade = null;
 		currentWord = null;
 
+	}
+
+	private double calcPmi(int count, int count1, int count2, int totalWords) {
+		return Math.log(count) + Math.log(totalWords) - Math.log(count1) - Math.log(count2);
 	}
 }

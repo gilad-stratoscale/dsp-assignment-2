@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 public class TokenizerMapper
 		extends Mapper<Object, Text, Text, IntWritable> {
 
-	private final static IntWritable one = new IntWritable(1);
 	private StopWordsFilter filter = new StopWordsFilter();
 	final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
@@ -33,6 +32,7 @@ public class TokenizerMapper
 
 		// TODO what we do with the decade? it should be the key?
 		int decade = getDecade(splits[1]);
+		IntWritable count = new IntWritable(Integer.parseInt(splits[2]));
 
 		if (ngram.split(" ").length < 0) {
 			return;
@@ -50,10 +50,12 @@ public class TokenizerMapper
 		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ").trim();
 		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
 
+		for (String s : trimWhitspaces.split(" ")) {
+			context.write(new Text(decade + "\t" + s), count);
+
+		}
 		for (String twoGram : twoGrams) {
-			context.write(new Text(decade + "\t" + twoGram), one);
-			context.write(new Text(decade + "\t" + twoGram.split(" ")[0]), one);
-			context.write(new Text(decade + "\t" + twoGram.split(" ")[1]), one);
+			context.write(new Text(decade + "\t" + twoGram), count);
 		}
 
 	}

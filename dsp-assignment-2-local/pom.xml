@@ -10,6 +10,35 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dsp-assignment-2-local</artifactId>
+
+    <properties>
+        <exclude.tests></exclude.tests>
+    </properties>
+    <profiles>
+        <profile>
+            <id>skip-emr-test</id>
+            <properties>
+                <exclude.tests>**/TestEmrUtils.java</exclude.tests>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <excludes>
+                        <exclude>${exclude.tests}</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
     <dependencies>
         <dependency>
             <groupId>com.amazonaws</groupId>
