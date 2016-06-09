@@ -8,7 +8,8 @@ import com.amazonaws.services.elasticmapreduce.util.StepFactory;
 import java.util.*;
 
 public class EmrUtils {
-
+    // TODO: config optimal number?
+    public static final int INSTANCE_COUNT = 2;
     public static final String MASTER_INSTANCE_TYPE = "m3.xlarge";
     public static final String SLAVE_INSTANCE_TYPE = "m1.large";
     private static final boolean debugStep = false;
@@ -99,5 +100,24 @@ public class EmrUtils {
 
         StepConfig jarStep = new StepConfig(stepName, jarConfig);
         return jarStep;
+    }
+
+    public static void main(String[] args){
+        UUID uuid = UUID.randomUUID();
+        List<StepConfig> jarSteps = new ArrayList<>();
+        Collection<String> argus = new ArrayList<>();
+        argus.add("s3://dsp2-emr-bucket/input");
+        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out1");
+        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out1");
+        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out2");
+        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out2");
+        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out3");
+
+        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all2.jar","dsp.All",argus,"All_steps"));
+        String s3LogUri = "s3://dsp2-emr-bucket/logs/testlog"+ uuid.toString() +".log";
+        EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "TestCreateCluster");
+        System.out.println("log location:  "+s3LogUri);
+        System.out.println("I\\O dirs extension:  "+uuid);
+
     }
 }

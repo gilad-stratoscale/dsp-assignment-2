@@ -24,12 +24,12 @@ public class All {
      * @param args: {stage1-input,stage1-output,stage2-input,stage2-output,stage3-input,stage3-output}
      */
     public static void main(String[] args) {
-        Path stage1InputPath = new Path(args[0]);
-        Path stage1OutputPath = new Path(args[1]);
-        Path stage2InputPath = new Path(args[2]);
-        Path stage2OutputPath = new Path(args[3]);
-        Path stage3InputPath = new Path(args[4]);
-        Path stage3OutputPath = new Path(args[5]);
+        Path stage1InputPath = new Path(args[1]);
+        Path stage1OutputPath = new Path(args[2]);
+        Path stage2InputPath = new Path(args[3]);
+        Path stage2OutputPath = new Path(args[4]);
+        Path stage3InputPath = new Path(args[5]);
+        Path stage3OutputPath = new Path(args[6]);
         Configuration conf = new Configuration();
         try {
             Job wordCountJob =new WordCount().getJob(conf,stage1InputPath,stage1OutputPath,"word count");
@@ -42,26 +42,12 @@ public class All {
             ControlledJob cj2 = new ControlledJob(stage2Job, Arrays.asList(new ControlledJob[]{cj1}));
             ControlledJob cj3 = new ControlledJob(stage3Job,Arrays.asList(new ControlledJob[]{cj1,cj2}));
 
-            //jobControl.addJob(cj1);
-
-// <debug>
-            boolean success=false;
-            try {
-                success = wordCountJob.waitForCompletion(true);
-            }
-            catch (InterruptedException | ClassNotFoundException e) {
-                e.printStackTrace(System.err);
-                System.exit(1);
-            }
-
-            System.out.println("finished");
-            System.exit(success ? 1 : 0);
-// </debug>
-            //       jobControl.addJob(cj2);
-    //        jobControl.addJob(cj3);
-            //Thread thread = new Thread(new HeartBit(jobControl));
-            //thread.start();
-            //jobControl.run();
+            jobControl.addJob(cj1);
+            jobControl.addJob(cj2);
+            jobControl.addJob(cj3);
+            Thread thread = new Thread(new HeartBit(jobControl));
+            thread.start();
+            jobControl.run();
 
 
 
@@ -103,16 +89,16 @@ public class All {
                             sb.append("\t\t" + entry.getKey() + ": " + entry.getValue().size() + "\n");
                         }
                         System.out.println(sb.toString());
-                        try {
-                            Thread.sleep(SLEEP_MILLIS);
-                        } catch (InterruptedException e) {
-                            System.out.println("jobcontrol thread interrupted");
-                            e.printStackTrace();
-                        }
                     }
                 }
                 catch(Throwable t) {
                     t.printStackTrace(System.err);
+                }
+                try {
+                    Thread.sleep(SLEEP_MILLIS);
+                } catch (InterruptedException e) {
+                    System.out.println("jobcontrol thread interrupted");
+                    e.printStackTrace();
                 }
             }
         }

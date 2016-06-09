@@ -19,7 +19,12 @@ public class WordCount implements MapReduceTask {
         try {
             Configuration conf = new Configuration();
             WordCount wc = new WordCount();
-            Job job = wc.getJob(conf, new Path(args[0]),new Path(args[1]),"word count");
+            System.out.println("INFO: running wordcount main. args: ");
+            for (String arg: args) {
+                System.out.println("\t"+arg);
+            }
+            System.out.println();
+            Job job = wc.getJob(conf, new Path(args[1]),new Path(args[2]),"word count");
             success = job.waitForCompletion(true);
 
             System.out.println("Got " +
@@ -35,6 +40,8 @@ public class WordCount implements MapReduceTask {
 	}
 
     public Job getJob(Configuration conf, Path inputPath, Path outputPath, String jobName) throws IOException {
+        System.out.println("INFO: input path: "+inputPath.toString());
+        System.out.println("INFO: output path: "+outputPath.toString());
         Job job = Job.getInstance(conf, jobName);
         job.setJarByClass(WordCount.class);
         job.setMapperClass(TokenizerMapper.class);
