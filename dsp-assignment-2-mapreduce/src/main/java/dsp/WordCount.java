@@ -20,6 +20,7 @@ public class WordCount implements MapReduceTask {
             Configuration conf = new Configuration();
             WordCount wc = new WordCount();
             System.out.println("INFO: running wordcount main. args: ");
+
             for (String arg: args) {
                 System.out.println("\t"+arg);
             }

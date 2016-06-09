@@ -8,16 +8,11 @@ import org.apache.hadoop.mapreduce.lib.jobcontrol.JobControl;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by hagai_lvi on 04/06/2016.
  */
 public class All {
-
-    public static final int SLEEP_MILLIS = 10000;
 
     /**
      *
@@ -50,7 +45,8 @@ public class All {
             jobControl.addJob(cj1);
             jobControl.addJob(cj2);
             jobControl.addJob(cj3);
-            Thread thread = new Thread(new HeartBit(jobControl));
+
+            Thread thread = new Thread(HeartBit.getInstance().setJobControl(jobControl));
             thread.start();
             jobControl.run();
         }
@@ -59,57 +55,4 @@ public class All {
         }
     }
 
-    private static class HeartBit implements Runnable{
-
-        JobControl jobControl;
-
-        public HeartBit(JobControl jobControl) {
-            this.jobControl = jobControl;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    if (jobControl.allFinished()) {
-                        System.out.print("Job control claims all jobs are finished. printing status:");
-                        writeStatus();
-                        System.out.println("exiting");
-                        //System.exit(0);
-                    } else {
-
-                        writeStatus();
-                    }
-                }
-                catch(Throwable t) {
-                    t.printStackTrace(System.err);
-                }
-                try {
-                    Thread.sleep(SLEEP_MILLIS);
-                } catch (InterruptedException e) {
-                    System.out.println("jobcontrol thread interrupted");
-                    e.printStackTrace(System.err);
-                    System.exit(1);
-                }
-            }
-        }
-
-        private void writeStatus() {
-            JobControl.ThreadState threadState = jobControl.getThreadState();
-            Map<String, List<ControlledJob>> jobListMap = new HashMap<>();
-            jobListMap.put("failed", jobControl.getFailedJobList());
-            jobListMap.put("ready", jobControl.getReadyJobsList());
-            jobListMap.put("running", jobControl.getRunningJobList());
-            jobListMap.put("successful", jobControl.getSuccessfulJobList());
-            jobListMap.put("waiting", jobControl.getWaitingJobList());
-            StringBuilder sb = new StringBuilder();
-            sb.append("\nJob Control status log: \n");
-            sb.append("\tThread state: " + threadState + "\n");
-            sb.append("\tJob states: \n");
-            for (Map.Entry<String, List<ControlledJob>> entry : jobListMap.entrySet()) {
-                sb.append("\t\t" + entry.getKey() + ": " + entry.getValue().size() + "\n");
-            }
-            System.out.println(sb.toString());
-        }
-    }
 }

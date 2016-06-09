@@ -15,7 +15,7 @@ import java.io.IOException;
 // TODO This class is not tested yet
 public class Stage2 implements MapReduceTask {
 	public static void main(String[] args) throws Exception {
-		Configuration conf = new Configuration();
+        Configuration conf = new Configuration();
         Stage2 stage2 = new Stage2();
 		Job job = stage2.getJob(conf,new Path(args[1]),new Path(args[2]),"stage 2");
 		System.exit(job.waitForCompletion(true) ? 0 : 1);

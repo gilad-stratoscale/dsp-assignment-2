@@ -1,6 +1,7 @@
 package dsp.stage2;
 
 import dsp.Constants;
+import dsp.HeartBit;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -13,7 +14,7 @@ public class Stage2Mapper extends Mapper<Object, Text, Text, Text> {
 			throws IOException, InterruptedException {
 
         //TODO remove that!
-        System.out.println("stage 2 mapper: "+context.getCounter(Constants.WordCounter.WORD));
+        HeartBit.getInstance().printMessage("stage 2 mapper: "+context.getCounter(Constants.WordCounter.WORD));
 
 		String decade = value.toString().split("\t")[0];
 		String ngram = value.toString().split("\t")[1];

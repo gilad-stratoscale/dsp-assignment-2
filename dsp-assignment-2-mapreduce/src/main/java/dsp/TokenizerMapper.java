@@ -16,14 +16,14 @@ public class TokenizerMapper
 		extends Mapper<Object, Text, Text, IntWritable> {
 
 	private StopWordsFilter filter = new StopWordsFilter();
-	final static Logger logger = Logger.getLogger(TokenizerMapper.class);
+	//final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
 
 	@Override
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 
-		logger.debug("Got key=\n" + key + "\nValue=\n" + value.toString());
+        HeartBit.getInstance().printMessage("WORD COUNT SAYS: Got key=\n" + key + "\nValue=\n" + value.toString());
 
 		String[] splits = value.toString().split("\t");
 		String ngram = splits[0].toLowerCase();
