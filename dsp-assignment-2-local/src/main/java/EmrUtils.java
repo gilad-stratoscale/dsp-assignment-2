@@ -113,7 +113,7 @@ public class EmrUtils {
         argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out2");
         argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out3");
 
-        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all2.jar","dsp.All",argus,"All_steps"));
+        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all5.jar","dsp.All",argus,"All_steps"));
         String s3LogUri = "s3://dsp2-emr-bucket/logs/testlog"+ uuid.toString() +".log";
         EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "TestCreateCluster");
         System.out.println("log location:  "+s3LogUri);

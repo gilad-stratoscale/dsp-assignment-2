@@ -24,6 +24,12 @@ public class All {
      * @param args: {stage1-input,stage1-output,stage2-input,stage2-output,stage3-input,stage3-output}
      */
     public static void main(String[] args) {
+        System.out.println("INFO: running ALL's main. args: ");
+        for (String arg: args) {
+            System.out.println("\t"+arg);
+        }
+        System.out.println();
+
         Path stage1InputPath = new Path(args[1]);
         Path stage1OutputPath = new Path(args[2]);
         Path stage2InputPath = new Path(args[3]);
@@ -41,16 +47,12 @@ public class All {
             ControlledJob cj1 = new ControlledJob(wordCountJob,null);
             ControlledJob cj2 = new ControlledJob(stage2Job, Arrays.asList(new ControlledJob[]{cj1}));
             ControlledJob cj3 = new ControlledJob(stage3Job,Arrays.asList(new ControlledJob[]{cj1,cj2}));
-
             jobControl.addJob(cj1);
             jobControl.addJob(cj2);
             jobControl.addJob(cj3);
             Thread thread = new Thread(new HeartBit(jobControl));
             thread.start();
             jobControl.run();
-
-
-
         }
         catch (IOException e) {
             e.printStackTrace(System.err);
@@ -70,25 +72,13 @@ public class All {
             while (true) {
                 try {
                     if (jobControl.allFinished()) {
-                        System.out.print("All jobs finished. exiting.");
-                        break;
+                        System.out.print("Job control claims all jobs are finished. printing status:");
+                        writeStatus();
+                        System.out.println("exiting");
+                        //System.exit(0);
                     } else {
 
-                        JobControl.ThreadState threadState = jobControl.getThreadState();
-                        Map<String, List<ControlledJob>> jobListMap = new HashMap<>();
-                        jobListMap.put("failed", jobControl.getFailedJobList());
-                        jobListMap.put("ready", jobControl.getReadyJobsList());
-                        jobListMap.put("running", jobControl.getRunningJobList());
-                        jobListMap.put("successful", jobControl.getSuccessfulJobList());
-                        jobListMap.put("waiting", jobControl.getWaitingJobList());
-                        StringBuilder sb = new StringBuilder();
-                        sb.append("\nJob Control status log: \n");
-                        sb.append("\tThread state: " + threadState + "\n");
-                        sb.append("\tJob states: \n");
-                        for (Map.Entry<String, List<ControlledJob>> entry : jobListMap.entrySet()) {
-                            sb.append("\t\t" + entry.getKey() + ": " + entry.getValue().size() + "\n");
-                        }
-                        System.out.println(sb.toString());
+                        writeStatus();
                     }
                 }
                 catch(Throwable t) {
@@ -98,9 +88,28 @@ public class All {
                     Thread.sleep(SLEEP_MILLIS);
                 } catch (InterruptedException e) {
                     System.out.println("jobcontrol thread interrupted");
-                    e.printStackTrace();
+                    e.printStackTrace(System.err);
+                    System.exit(1);
                 }
             }
+        }
+
+        private void writeStatus() {
+            JobControl.ThreadState threadState = jobControl.getThreadState();
+            Map<String, List<ControlledJob>> jobListMap = new HashMap<>();
+            jobListMap.put("failed", jobControl.getFailedJobList());
+            jobListMap.put("ready", jobControl.getReadyJobsList());
+            jobListMap.put("running", jobControl.getRunningJobList());
+            jobListMap.put("successful", jobControl.getSuccessfulJobList());
+            jobListMap.put("waiting", jobControl.getWaitingJobList());
+            StringBuilder sb = new StringBuilder();
+            sb.append("\nJob Control status log: \n");
+            sb.append("\tThread state: " + threadState + "\n");
+            sb.append("\tJob states: \n");
+            for (Map.Entry<String, List<ControlledJob>> entry : jobListMap.entrySet()) {
+                sb.append("\t\t" + entry.getKey() + ": " + entry.getValue().size() + "\n");
+            }
+            System.out.println(sb.toString());
         }
     }
 }

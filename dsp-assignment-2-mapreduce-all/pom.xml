@@ -27,7 +27,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>dsp.WordCount</mainClass>
+                            <mainClass>dsp.All</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
