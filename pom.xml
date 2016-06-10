@@ -15,6 +15,7 @@
         <module>dsp-assignment-2-mapreduce-stage-3</module>
         <module>dsp-assignment-2-mapreduce-all</module>
         <module>dsp-assignment-2-commons</module>
+        <module>dsp-assignment-2-part-b</module>
     </modules>
 
     <build>
