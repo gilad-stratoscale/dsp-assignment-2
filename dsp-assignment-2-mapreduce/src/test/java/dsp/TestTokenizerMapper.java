@@ -159,7 +159,7 @@ public class TestTokenizerMapper {
 	public void testCounter() throws IOException {
 		mapDriver.withInput(new IntWritable(1), new Text("aaa leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.run();
-		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.WordCounter.WORD).getValue());
+		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.Counters.WORD).getValue());
 	}
 
 

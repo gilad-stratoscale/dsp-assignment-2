@@ -14,10 +14,17 @@ import java.io.IOException;
 
 public class Stage3 implements MapReduceTask {
 	public static void main(String[] args) throws Exception {
-		Configuration conf = new Configuration();
+        System.out.println("INFO: running Stage3's main. args: ");
+        for (String arg: args) {
+            System.out.println("\t"+arg);
+        }
+        System.out.println();
+
+        Configuration conf = new Configuration();
         Stage3 stage3 = new Stage3();
         Job job = stage3.getJob(conf, new Path(args[1]), new Path(args[2]),"stage3");
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+        boolean success = job.waitForCompletion(true);
+        //System.exit(success ? 0 : 1);
 	}
 
     @Override

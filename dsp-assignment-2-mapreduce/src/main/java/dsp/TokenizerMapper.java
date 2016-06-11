@@ -3,7 +3,6 @@ package dsp;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,7 +22,7 @@ public class TokenizerMapper
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 
-        HeartBit.getInstance().printMessage("WORD COUNT SAYS: Got key=\n" + key + "\nValue=\n" + value.toString());
+        System.out.println("WORD COUNT SAYS: Got key=\n" + key + "\nValue=\n" + value.toString());
 
 		String[] splits = value.toString().split("\t");
 		String ngram = splits[0].toLowerCase();
@@ -61,7 +60,7 @@ public class TokenizerMapper
 	}
 
 	private void incrementWordCounter(Context context, String ngram) {
-		context.getCounter(Constants.WordCounter.WORD).increment(ngram.split(" ").length);
+		context.getCounter(Constants.Counters.WORD).increment(ngram.split(" ").length);
 	}
 
 	/**

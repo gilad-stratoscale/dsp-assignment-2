@@ -1,3 +1,4 @@
+package dsp;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
@@ -20,6 +21,9 @@ public class EmrUtils {
     private static final String JOB_FLOW_ROLE = "EMR_EC2_DefaultRole";
     public static final String JAVA_HOME = "JAVA_HOME";
     public static final String JAVA_HOME_PATH = "/usr/lib/jvm/java-1.8.0";
+    public static final String JAR1_URL = "s3://dsp2-emr-bucket/jars/s1.jar";
+    public static final String JAR2_URL = "s3://dsp2-emr-bucket/jars/s2.jar";
+    public static final String JAR3_URL = "s3://dsp2-emr-bucket/jars/s3.jar";
 
 
     public static RunJobFlowResult createCluster(List<StepConfig> jarStepConfigs, String s3LogUri, int instanceCount, String jobName){
@@ -105,17 +109,43 @@ public class EmrUtils {
     public static void main(String[] args){
         UUID uuid = UUID.randomUUID();
         List<StepConfig> jarSteps = new ArrayList<>();
-        Collection<String> argus = new ArrayList<>();
-        argus.add("s3://dsp2-emr-bucket/input");
-        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out1");
-        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out1");
-        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out2");
-        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out2");
-        argus.add("s3://dsp2-emr-bucket/output/"+uuid.toString()+"/out3");
+        Collection<String> argus1 = new ArrayList<>();
+        Collection<String> argus2 = new ArrayList<>();
+        Collection<String> argus3 = new ArrayList<>();
+        String inputPath = "s3://dsp2-emr-bucket/input";
+        String outputPathPrefix = "s3://dsp2-emr-bucket/output/";
+        String out1 = outputPathPrefix + uuid.toString() + "/out1";
+        String out2 = outputPathPrefix + uuid.toString() + "/out2";
+        String out3 = outputPathPrefix + uuid.toString() + "/out3";
 
-        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all5.jar","dsp.All",argus,"All_steps"));
+        argus1.add(inputPath);
+        argus1.add(out1);
+        JarStepConfig step1 = new JarStepConfig(JAR1_URL,
+                "dsp.WordCount",argus1,"wordcount");
+
+        argus2.add(out1);
+        argus2.add(out2);
+        JarStepConfig step2 = new JarStepConfig(JAR2_URL,"dsp.Stage2",argus2,"step2");
+
+        argus3.add(out2);
+        argus3.add(out3);
+        JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3");
+
+        /*argus.add(inputPath);
+        argus.add(outputPathPrefix +uuid.toString()+"/out1");
+        argus.add(outputPathPrefix +uuid.toString()+"/out1");
+        argus.add(outputPathPrefix +uuid.toString()+"/out2");
+        argus.add(outputPathPrefix +uuid.toString()+"/out2");
+        argus.add(outputPathPrefix +uuid.toString()+"/out3");
+        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all9.jar","dsp.All",argus,"All_steps"));*/
+
+
+        jarSteps.add(EmrUtils.createJarStep(step1));
+        jarSteps.add(EmrUtils.createJarStep(step2));
+        jarSteps.add(EmrUtils.createJarStep(step3));
+
         String s3LogUri = "s3://dsp2-emr-bucket/logs/testlog"+ uuid.toString() +".log";
-        EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "TestCreateCluster");
+        EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "DSP2");
         System.out.println("log location:  "+s3LogUri);
         System.out.println("I\\O dirs extension:  "+uuid);
 

@@ -14,28 +14,9 @@ public class HeartBit implements Runnable {
 
     public static final int SLEEP_MILLIS = 10000;
     JobControl jobControl;
-    private static HeartBit instance;
-    BlockingQueue<String> queue = new ArrayBlockingQueue<String>(5000);
 
-
-    public static HeartBit getInstance() {
-        if (instance == null) {
-            synchronized (HeartBit.class) {
-                if (instance==null) {
-                    instance = new HeartBit();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private HeartBit() {
-
-    }
-
-    public HeartBit setJobControl(JobControl jobControl) {
-        this.jobControl = jobControl;
-        return this;
+    public HeartBit(JobControl jc) {
+        this.jobControl=jc;
     }
 
     @Override
@@ -54,16 +35,6 @@ public class HeartBit implements Runnable {
                 t.printStackTrace(System.err);
             }
             try {
-                String message;
-                while(true) {
-                    message = queue.poll(10, TimeUnit.MILLISECONDS);
-                    if (message == null) {
-                        break;
-                    }
-                    else {
-                        System.out.println("Map reduce message: "+message);
-                    }
-                }
                 Thread.sleep(SLEEP_MILLIS);
             } catch (InterruptedException e) {
                 System.out.println("jobcontrol thread interrupted");
@@ -89,19 +60,11 @@ public class HeartBit implements Runnable {
             List<ControlledJob> jobList = entry.getValue();
             sb.append("\t\t" + entry.getKey() + ": " + jobList.size() + ":\n");
             for (ControlledJob cj : jobList) {
-                sb.append("\t\t\tname: " + cj.getJobName());
-                sb.append("\t\t\tmessage: " + cj.getMessage());
+                sb.append("\t\t\tname: " + cj.getJobName()+"\n");
+                sb.append("\t\t\tmessage: " + cj.getMessage()+"\n");
             }
         }
         System.out.println(sb.toString());
     }
 
-    public void printMessage(String message) {
-        try {
-            queue.put(message);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace(System.err);
-        }
-    }
 }

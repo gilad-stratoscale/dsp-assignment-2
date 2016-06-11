@@ -10,6 +10,7 @@ public class Stage2Partitioner extends Partitioner<Text,Text> {
 
 	@Override
 	public int getPartition(Text key, Text value, int numOfPartitions) {
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> e.printStackTrace(System.err));
 		return key.toString().split(" ")[0].hashCode() % numOfPartitions;
 	}
 }

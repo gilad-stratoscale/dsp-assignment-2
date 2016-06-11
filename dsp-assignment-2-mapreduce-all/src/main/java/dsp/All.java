@@ -46,7 +46,7 @@ public class All {
             jobControl.addJob(cj2);
             jobControl.addJob(cj3);
 
-            Thread thread = new Thread(HeartBit.getInstance().setJobControl(jobControl));
+            Thread thread = new Thread(new HeartBit(jobControl));
             thread.start();
             jobControl.run();
         }

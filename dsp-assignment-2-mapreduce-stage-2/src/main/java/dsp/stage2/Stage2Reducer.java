@@ -13,7 +13,7 @@ public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 
 	@Override
 	public void reduce(Text key, Iterable<Text> values,Context context) throws IOException, InterruptedException {
-
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> e.printStackTrace(System.err));
 		for (Text value : values) {
 			String seperator = "\t";
 			String decade = value.toString().split(seperator)[0];
