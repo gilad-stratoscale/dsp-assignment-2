@@ -1,6 +1,6 @@
 package dsp;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TokenizerMapper
-		extends Mapper<Object, Text, Text, IntWritable> {
+		extends Mapper<Object, Text, Text, LongWritable> {
 
 	private StopWordsFilter filter = new StopWordsFilter();
 	//final static Logger logger = Logger.getLogger(TokenizerMapper.class);
@@ -29,9 +29,8 @@ public class TokenizerMapper
 
 		incrementWordCounter(context, ngram);
 
-		// TODO what we do with the decade? it should be the key?
 		int decade = getDecade(splits[1]);
-		IntWritable count = new IntWritable(Integer.parseInt(splits[2]));
+		LongWritable count = new LongWritable(Long.parseLong(splits[2]));
 
 		if (ngram.split(" ").length < 0) {
 			return;

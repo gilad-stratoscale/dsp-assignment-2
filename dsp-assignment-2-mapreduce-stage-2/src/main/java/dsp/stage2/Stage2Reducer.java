@@ -9,7 +9,7 @@ public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 
 	private String currentWord = null;
 	private String currentDecade = null;
-	private int currentKeyCount = -1;
+	private long currentKeyCount = -1;
 
 	@Override
 	public void reduce(Text key, Iterable<Text> values,Context context) throws IOException, InterruptedException {
@@ -18,9 +18,9 @@ public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 			String seperator = "\t";
 			String decade = value.toString().split(seperator)[0];
 			String words = value.toString().split(seperator)[1];
-			int count;
+			Long count;
 			try {
-				count = Integer.parseInt(value.toString().split(seperator)[2]);
+				count = Long.parseLong(value.toString().split(seperator)[2]);
 			}catch (Exception e) {
 				throw new RuntimeException(key.toString() + "\n" + value.toString(),e);
 			}

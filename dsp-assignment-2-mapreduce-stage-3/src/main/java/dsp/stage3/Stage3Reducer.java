@@ -12,7 +12,7 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 	private String currentWord = null;
 	private String currentDecade = null;
-	private int currentKeyCount = -1;
+	private long currentKeyCount = -1;
 
 
 
@@ -23,7 +23,7 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 			String seperator = "\t";
 			String decade = value.toString().split(seperator)[0];
 			String words = value.toString().split(seperator)[1];
-			int count = Integer.parseInt(value.toString().split(seperator)[2]);
+			long count = Long.parseLong(value.toString().split(seperator)[2]);
 
 			if (key.toString().endsWith("*")) {
 				assert currentWord == null;
@@ -44,13 +44,13 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 			String word2 = value.toString().split(seperator)[3];
 			String count2 = value.toString().split(seperator)[4];
 
-			int totalWords = 27982;// TODO
+			long totalWords = 27982;// TODO
 			String valueToEmit = String.join(
 					Stage3Mapper.SEPERATOR, decade,
-					words, Integer.toString(count),
-					currentWord, Integer.toString(currentKeyCount),
+					words, Long.toString(count),
+					currentWord, Long.toString(currentKeyCount),
 					word2, count2,
-					Double.toString(calcPmi(count, Integer.parseInt(count2), currentKeyCount, totalWords)));
+					Double.toString(calcPmi(count, Long.parseLong(count2), currentKeyCount, totalWords)));
 
 			context.write(
 					new Text(decade + seperator + words),
@@ -67,8 +67,7 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 		currentWord = null;
 
 	}
-
-	private double calcPmi(int count, int count1, int count2, int totalWords) {
+	private double calcPmi(long count, long count1, long count2, long totalWords) {
 		return Math.log(count) + Math.log(totalWords) - Math.log(count1) - Math.log(count2);
 	}
 }

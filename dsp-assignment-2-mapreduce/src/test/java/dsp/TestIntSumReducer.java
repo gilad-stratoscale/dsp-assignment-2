@@ -1,6 +1,6 @@
 package dsp;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
@@ -12,22 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestIntSumReducer {
-	private ReduceDriver<Text, IntWritable, Text, IntWritable> reduceDriver;
+	private ReduceDriver<Text, LongWritable, Text, LongWritable> reduceDriver;
 
 	@Before
 	public void setUp() {
-		Reducer<Text, IntWritable, Text, IntWritable> reducer = new IntSumReducer();
+		Reducer<Text, LongWritable, Text, LongWritable> reducer = new IntSumReducer();
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
 	@Test
 	public void testMapper() throws IOException {
-		List<IntWritable> values = new ArrayList<IntWritable>();
-		values.add(new IntWritable(1));
-		values.add(new IntWritable(2));
-		values.add(new IntWritable(3));
+		List<LongWritable> values = new ArrayList();
+		values.add(new LongWritable(1));
+		values.add(new LongWritable(2));
+		values.add(new LongWritable(3));
 		reduceDriver.withInput(new Text("abc"), values);
-		reduceDriver.withOutput(new Text("abc"), new IntWritable(6));
+		reduceDriver.withOutput(new Text("abc"), new LongWritable(6));
 		reduceDriver.runTest();
 	}
 }

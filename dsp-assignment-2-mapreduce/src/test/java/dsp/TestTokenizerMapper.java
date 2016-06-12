@@ -1,6 +1,6 @@
 package dsp;
 
-import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
 import org.junit.Assert;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class TestTokenizerMapper {
-	private MapDriver<Object, Text, Text, IntWritable> mapDriver;
+	private MapDriver<Object, Text, Text, LongWritable> mapDriver;
 	private TokenizerMapper mapper;
 
 	@Before
@@ -22,27 +22,27 @@ public class TestTokenizerMapper {
 
 	@Test
 	public void testMapper() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
+		mapDriver.withInput(new LongWritable(1), new Text("\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
 		mapDriver.runTest();
 	}
 
 	@Test
 	public void testMapper2() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
-		mapDriver.withOutput(new Text("1990\tfinal"),new IntWritable(3));
-		mapDriver.withOutput(new Text("1990\tstages"),new IntWritable(3));
-		mapDriver.withOutput(new Text("1990\tfinal stages"),new IntWritable(3));
+		mapDriver.withInput(new LongWritable(1), new Text("\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
+		mapDriver.withOutput(new Text("1990\tfinal"),new LongWritable(3));
+		mapDriver.withOutput(new Text("1990\tstages"),new LongWritable(3));
+		mapDriver.withOutput(new Text("1990\tfinal stages"),new LongWritable(3));
 		mapDriver.runTest();
 	}
 
 	@Test
 	public void testMapper3() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("' leaves open the possibility\t1981\t4\t4\t3"));
-		mapDriver.withOutput(new Text("1980\tleaves"),new IntWritable(4));
-		mapDriver.withOutput(new Text("1980\topen"),new IntWritable(4));
-		mapDriver.withOutput(new Text("1980\tpossibility"),new IntWritable(4));
-		mapDriver.withOutput(new Text("1980\tleaves open"),new IntWritable(4));
-		mapDriver.withOutput(new Text("1980\topen possibility"),new IntWritable(4));
+		mapDriver.withInput(new LongWritable(1), new Text("' leaves open the possibility\t1981\t4\t4\t3"));
+		mapDriver.withOutput(new Text("1980\tleaves"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\topen"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\tpossibility"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\tleaves open"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\topen possibility"),new LongWritable(4));
 		mapDriver.runTest();
 	}
 
@@ -150,14 +150,14 @@ public class TestTokenizerMapper {
 				withInput(
 						new Text(key),
 						new Text(value));
-		mapDriver.withOutput(new Text("1950\tunited"), new IntWritable(3));
+		mapDriver.withOutput(new Text("1950\tunited"), new LongWritable(3));
 		mapDriver.runTest();
 
 	}
 
 	@Test
 	public void testCounter() throws IOException {
-		mapDriver.withInput(new IntWritable(1), new Text("aaa leaves open the possibility\t1981\t4\t4\t3"));
+		mapDriver.withInput(new LongWritable(1), new Text("aaa leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.run();
 		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.Counters.WORD).getValue());
 	}
