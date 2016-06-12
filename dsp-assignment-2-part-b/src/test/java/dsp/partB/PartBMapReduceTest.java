@@ -28,13 +28,13 @@ public class PartBMapReduceTest {
 		mapReduceDriver.
 				withInput(new Text(),new Text(
 						// related words
-						"1790\ttiger feline\t1790\ttiger feline\t1\tfeline\t1\ttiger\t1\t7.0812413")).
+						"1790\ttiger feline\t1\tfeline\t1\ttiger\t1\t7.0812413")).
 				withInput(new Text(),new Text(
 						// unrelated words
-						"1810\tstock live\t1810\tstock live\t1\tlive\t1\tstock\t1\t2.86791248")).
+						"1810\tstock live\t1\tlive\t1\tstock\t1\t2.86791248")).
 				withInput(new Text(""), new Text(
 						// words that were not tagged
-						"1810\ta b\t1810\ta b\t1\tb\t1\ta\t1\t3.97814814")).
+						"1810\ta b\t1\tb\t1\ta\t1\t3.97814814")).
 				withOutput(new Text(""), new Text("fscore:1.0 pmi threshold:7.0812413"));
 		mapReduceDriver.runTest();
 	}

@@ -41,7 +41,7 @@ public class Stage3ReducerTest {
 								String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2, twoGramCount, w1, w1Count)))).
 				withOutput(
 						new Text(String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2)),
-						new Text(String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2, twoGramCount, w2, w2Count, w1, w1Count, "8.447557256065176"))).
+						new Text(String.join(Stage3Mapper.SEPERATOR, twoGramCount, w2, w2Count, w1, w1Count, "8.447557256065176"))).
 				runTest();
 	}
 
