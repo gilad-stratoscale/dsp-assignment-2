@@ -46,10 +46,12 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 			long totalWords = 27982;// TODO
 			String valueToEmit = String.join(
-					Stage3Mapper.SEPERATOR, decade,
-					words, Long.toString(count),
-					currentWord, Long.toString(currentKeyCount),
-					word2, count2,
+					Stage3Mapper.SEPERATOR,
+					Long.toString(count),
+					currentWord,
+					Long.toString(currentKeyCount),
+					word2,
+					count2,
 					Double.toString(calcPmi(count, Long.parseLong(count2), currentKeyCount, totalWords)));
 
 			context.write(
