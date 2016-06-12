@@ -28,11 +28,11 @@ public class Stage3MapperTest {
 		String count = "1";
 		mapDriver.addInput(new Text(),
 				new Text(
-						String.join(Stage3Mapper.SEPERATOR, year, word, year, word, count)
+						String.join(Stage3Mapper.SEPERATOR, year, word, word, count)
 				));
 		mapDriver.addOutput(
 				new Text(String.join(Stage3Mapper.SEPERATOR, year, word) + " *"),
-				new Text(String.join(Stage3Mapper.SEPERATOR, year, word, count))
+				new Text(String.join(Stage3Mapper.SEPERATOR, word, count))
 		);
 
 		mapDriver.runTest();
@@ -47,11 +47,11 @@ public class Stage3MapperTest {
 		String count2 = "2";
 		mapDriver.addInput(new Text(),
 				new Text(
-						String.join(Stage3Mapper.SEPERATOR, year, word2, year, word1 + " " + word2, count1, word1, count2)
+						String.join(Stage3Mapper.SEPERATOR, year, word2, word1 + " " + word2, count1, word1, count2)
 				));
 		mapDriver.addOutput(
 				new Text(String.join(Stage3Mapper.SEPERATOR, year, word2) + " +"),
-				new Text(String.join(Stage3Mapper.SEPERATOR, year, word1 + " " + word2, count1, word1, count2))
+				new Text(String.join(Stage3Mapper.SEPERATOR, word1 + " " + word2, count1, word1, count2))
 		);
 		mapDriver.runTest();
 	}
@@ -62,7 +62,6 @@ public class Stage3MapperTest {
 				Stage3Mapper.SEPERATOR,
 				"1980",
 				"abc",
-				"1980",
 				"abc",
 				"1"
 		));
@@ -70,7 +69,7 @@ public class Stage3MapperTest {
 		Assert.assertEquals(keyPostfix, "*");
 
 		String key2Postfix = Stage3Mapper.getKeyPostfix(
-				"1580\twhate\t1580\ter whate\t1\ter\t1\n"
+				"1580\twhate\ter whate\t1\ter\t1\n"
 		);
 
 		Assert.assertEquals(key2Postfix, "+");

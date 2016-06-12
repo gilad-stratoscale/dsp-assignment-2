@@ -21,14 +21,11 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 		for (Text value : values) {
 			String seperator = "\t";
-			String decade = value.toString().split(seperator)[0];
-			String words = value.toString().split(seperator)[1];
-			long count = Long.parseLong(value.toString().split(seperator)[2]);
+			String decade = key.toString().split(seperator)[0];
+			String words = value.toString().split(seperator)[0];
+			long count = Long.parseLong(value.toString().split(seperator)[1]);
 
 			if (key.toString().endsWith("*")) {
-				assert currentWord == null;
-				assert currentDecade == null;
-				assert currentKeyCount == -1;
 
 				// This is the first word, the key is the decade + first word. remove the "*"
 				this.currentWord = words;
@@ -41,8 +38,8 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 			assert currentKeyCount != -1;
 
-			String word2 = value.toString().split(seperator)[3];
-			String count2 = value.toString().split(seperator)[4];
+			String word2 = value.toString().split(seperator)[2];
+			String count2 = value.toString().split(seperator)[3];
 
 			long totalWords = 27982;// TODO
 			String valueToEmit = String.join(

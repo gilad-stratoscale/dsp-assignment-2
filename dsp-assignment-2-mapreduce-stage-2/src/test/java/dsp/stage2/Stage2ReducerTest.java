@@ -38,13 +38,15 @@ public class Stage2ReducerTest {
 		values.add(new Text("1990" + seperator + "good girl" + seperator + "4"));
 		reduceDriver.withInput(new Text("good"),values);
 
-		reduceDriver.withOutput(new Text("1990" + seperator + "good"), new Text("1990" + seperator + "good" + seperator + "2"));
+		reduceDriver.withOutput(
+				new Text("1990" + seperator + "good"),
+				new Text("good" + seperator + "2"));
 		reduceDriver.withOutput(
 				new Text("1990" + seperator + "boy"),
-				new Text("1990" + seperator + "good boy" + seperator + "3" + seperator + "good" + seperator + "2"));
+				new Text("good boy" + seperator + "3" + seperator + "good" + seperator + "2"));
 		reduceDriver.withOutput(
 				new Text("1990" + seperator + "girl"),
-				new Text("1990" + seperator + "good girl" + seperator + "4" + seperator + "good" + seperator + "2"));
+				new Text("good girl" + seperator + "4" + seperator + "good" + seperator + "2"));
 		reduceDriver.runTest();
 	}
 

@@ -1,12 +1,12 @@
-package dsp.stage2;
+package dsp;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Partitioner;
 
 /**
- * Created by hagai_lvi on 31/05/2016.
+ * partition according to the first word of the key
  */
-public class Stage2Partitioner extends Partitioner<Text,Text> {
+public class FirstWordPartitioner extends Partitioner<Text,Text> {
 
 	@Override
 	public int getPartition(Text key, Text value, int numOfPartitions) {

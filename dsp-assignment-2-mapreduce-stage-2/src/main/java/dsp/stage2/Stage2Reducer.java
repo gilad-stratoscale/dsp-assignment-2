@@ -32,13 +32,13 @@ public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 				this.currentKeyCount = count;
 				// TODO assert that the iterator has no more values
 
-				context.write(new Text(currentDecade + seperator + currentWord), new Text(currentDecade + seperator + currentWord + seperator + currentKeyCount));
+				context.write(new Text(currentDecade + seperator + currentWord), new Text(currentWord + seperator + currentKeyCount));
 				return;
 			}
 
 			assert currentKeyCount != -1;
 
-			String valueToEmit = decade + seperator + words + seperator + count + seperator + currentWord + seperator + currentKeyCount;
+			String valueToEmit = words + seperator + count + seperator + currentWord + seperator + currentKeyCount;
 			context.write(
 					new Text(decade + seperator + words.split(" ")[1]), // Get the second word as a key
 					new Text(

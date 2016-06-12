@@ -16,9 +16,11 @@ public class Stage3Mapper extends Mapper<Object, Text, Text, Text> {
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
 		String keyPostfix = getKeyPostfix(value.toString());
+		String keyToEmit = getKey(value.toString()) + " " + keyPostfix;
+		String valueToEmit = getValue(value.toString());
 		context.write(
-				new Text(getKey(value.toString()) + " " + keyPostfix),
-				new Text(getValue(value.toString()))
+				new Text(keyToEmit),
+				new Text(valueToEmit)
 		);
 	}
 
@@ -26,7 +28,7 @@ public class Stage3Mapper extends Mapper<Object, Text, Text, Text> {
 	 * Return "+" for 2grams and "*" for 1grams
 	 */
 	static String getKeyPostfix(String s) {
-		return s.split(SEPERATOR)[3].contains(" ") ? "+" : "*";
+		return s.split(SEPERATOR)[2].contains(" ") ? "+" : "*";
 	}
 
 	/**

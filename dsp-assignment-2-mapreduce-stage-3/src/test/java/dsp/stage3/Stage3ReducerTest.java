@@ -34,11 +34,11 @@ public class Stage3ReducerTest {
 		reduceDriver.
 				withInput(
 						new Text(String.join(Stage3Mapper.SEPERATOR, year, w2) + " *"),
-						Collections.singletonList(new Text(String.join(Stage3Mapper.SEPERATOR, year, w2, w2Count)))).
+						Collections.singletonList(new Text(String.join(Stage3Mapper.SEPERATOR, w2, w2Count)))).
 				withInput(
 						new Text(String.join(Stage3Mapper.SEPERATOR, year, w2) + " +"),
 						Collections.singletonList(new Text(
-								String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2, twoGramCount, w1, w1Count)))).
+								String.join(Stage3Mapper.SEPERATOR, w1 + " " + w2, twoGramCount, w1, w1Count)))).
 				withOutput(
 						new Text(String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2)),
 						new Text(String.join(Stage3Mapper.SEPERATOR, twoGramCount, w2, w2Count, w1, w1Count, "8.447557256065176"))).

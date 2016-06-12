@@ -1,6 +1,7 @@
 package dsp.stage2;
 
 import dsp.Constants;
+import dsp.FirstWordPartitioner;
 import dsp.MapReduceTask;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -40,7 +41,7 @@ public class Stage2 implements MapReduceTask {
         job.setMapperClass(Stage2Mapper.class);
         // TODO when using the reducer as a combiner an array out of bounds is thrown. check this
         job.setReducerClass(Stage2Reducer.class);
-        job.setPartitionerClass(Stage2Partitioner.class);
+        job.setPartitionerClass(FirstWordPartitioner.class);
 
         // TODO what should this be?
         job.setOutputKeyClass(Text.class);
