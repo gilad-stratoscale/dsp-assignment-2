@@ -16,6 +16,7 @@
         <module>dsp-assignment-2-mapreduce-all</module>
         <module>dsp-assignment-2-commons</module>
         <module>dsp-assignment-2-part-b</module>
+        <module>top10</module>
     </modules>
 
     <build>

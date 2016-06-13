@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmrUtils {
     // TODO: config optimal number?
-    public static final int INSTANCE_COUNT = 2;
+    public static final int INSTANCE_COUNT = 3;
     public static final String MASTER_INSTANCE_TYPE = "m3.xlarge";
     public static final String SLAVE_INSTANCE_TYPE = "m1.large";
     private static final boolean debugStep = false;
@@ -130,15 +130,6 @@ public class EmrUtils {
         argus3.add(out2);
         argus3.add(out3);
         JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3");
-
-        /*argus.add(inputPath);
-        argus.add(outputPathPrefix +uuid.toString()+"/out1");
-        argus.add(outputPathPrefix +uuid.toString()+"/out1");
-        argus.add(outputPathPrefix +uuid.toString()+"/out2");
-        argus.add(outputPathPrefix +uuid.toString()+"/out2");
-        argus.add(outputPathPrefix +uuid.toString()+"/out3");
-        jarSteps.add(EmrUtils.createJarStep("s3://dsp2-emr-bucket/jars/all9.jar","dsp.All",argus,"All_steps"));*/
-
 
         jarSteps.add(EmrUtils.createJarStep(step1));
         jarSteps.add(EmrUtils.createJarStep(step2));

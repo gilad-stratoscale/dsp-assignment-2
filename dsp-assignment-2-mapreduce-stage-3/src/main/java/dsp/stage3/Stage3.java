@@ -14,6 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class Stage3 implements MapReduceTask {
 	public static void main(String[] args) throws Exception {
@@ -22,19 +23,16 @@ public class Stage3 implements MapReduceTask {
             System.out.println("\t"+arg);
         }
         System.out.println();
-        long counter =-1;
+        Configuration conf = new Configuration();
         try {
-            counter = CounterHandler.readCounter(Constants.Counters.WORD);
-            System.out.println("counter read from s3: "+counter);
+            CounterHandler.readCountersIntoConfiguration(conf);
+            System.out.println("read counters into conf?");
+            System.out.println(conf.get(Constants.COUNTER_NAME_PREFIX+1900));
         }
         catch(Throwable t) {
             System.err.println("Failed to read counter from s3: ");
             t.printStackTrace(System.err);
         }
-        System.out.println();
-
-        Configuration conf = new Configuration();
-        conf.set(Constants.COUNTER_KEY,""+counter);
         Stage3 stage3 = new Stage3();
         Job job = stage3.getJob(conf, new Path(args[1]), new Path(args[2]),"stage3");
         boolean success = job.waitForCompletion(true);

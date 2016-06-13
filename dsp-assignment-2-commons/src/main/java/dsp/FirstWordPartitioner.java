@@ -11,7 +11,7 @@ public class FirstWordPartitioner extends Partitioner<Text,Text> {
 	@Override
 	public int getPartition(Text key, Text value, int numOfPartitions) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> e.printStackTrace(System.err));
-		return key.toString().split(" ")[0].hashCode() % numOfPartitions;
+		return Math.abs(key.toString().split(" ")[0].hashCode() % numOfPartitions);
 	}
 }
 

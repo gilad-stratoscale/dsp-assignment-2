@@ -28,13 +28,13 @@ public class TokenizerMapper
 		String[] splits = value.toString().split("\t");
 		String ngram = splits[0].toLowerCase();
 
-		incrementWordCounter(context, ngram);
 
-		int decade = getDecade(splits[1]);
-		if (decade < MIN_DECADE) {
-			return;
-		}
-		LongWritable count = new LongWritable(Long.parseLong(splits[2]));
+        int decade = getDecade(splits[1]);
+        if (decade < MIN_DECADE) {
+            return;
+        }
+        incrementWordCounter(context, ngram,decade);
+        LongWritable count = new LongWritable(Long.parseLong(splits[2]));
 
 		if (ngram.split(" ").length < 0) {
 			return;
@@ -62,8 +62,9 @@ public class TokenizerMapper
 
 	}
 
-	private void incrementWordCounter(Context context, String ngram) {
-		context.getCounter(Constants.Counters.WORD).increment(ngram.split(" ").length);
+	private void incrementWordCounter(Context context, String ngram, int decade) {
+        Constants.Counters decadeCounter = Constants.Counters.valueOf(Constants.COUNTER_NAME_PREFIX+decade);
+		context.getCounter(decadeCounter).increment(ngram.split(" ").length);
 	}
 
 	/**

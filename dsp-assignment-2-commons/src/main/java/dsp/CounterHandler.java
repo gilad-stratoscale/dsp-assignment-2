@@ -1,12 +1,11 @@
 package dsp;
 
 import com.amazonaws.AmazonClientException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 
 import java.io.*;
 import java.nio.charset.Charset;
-
-import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
 
 public class CounterHandler {
     private static final String FOLDER_PREFIX = "counters/";
@@ -28,7 +27,7 @@ public class CounterHandler {
         byte[] data = Charset.forName("UTF-8").encode("" + counterValue).array();
         try {
             is = new ByteArrayInputStream(data);
-            boolean b = S3Utils.uploadFile(Constants.CounterBucket, FOLDER_PREFIX+counterName, is, data.length);
+            boolean b = S3Utils.uploadFile(Constants.BUCKET_NAME, FOLDER_PREFIX+counterName, is, data.length);
             return b;
         }
         catch(AmazonClientException e) {
@@ -51,7 +50,7 @@ public class CounterHandler {
         String counterName = counterEnum.name();
         BufferedReader br=null;
         try {
-            InputStream fileInputStream = S3Utils.getFileInputStream(Constants.CounterBucket, FOLDER_PREFIX + counterName);
+            InputStream fileInputStream = S3Utils.getFileInputStream(Constants.BUCKET_NAME, FOLDER_PREFIX + counterName);
             br = new BufferedReader(new InputStreamReader(fileInputStream));
             String s = br.readLine();
             System.out.println("read counter: read line is: "+s);
@@ -71,6 +70,18 @@ public class CounterHandler {
             catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void writeCounters(Job job) {
+        for (Constants.Counters decadeCounter : Constants.Counters.values()) {
+            writeCounter(decadeCounter,job);
+        }
+    }
+
+    public static void readCountersIntoConfiguration(Configuration conf) {
+        for (Constants.Counters counter : Constants.Counters.values()) {
+            conf.set(counter.name(), String.valueOf(readCounter(counter)));
         }
     }
 }

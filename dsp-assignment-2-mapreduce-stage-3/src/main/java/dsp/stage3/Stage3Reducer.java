@@ -21,16 +21,6 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 
 	@Override
 	public void reduce(Text key, Iterable<Text> values,Context context) throws IOException, InterruptedException {
-        String counterValueStr = context.getConfiguration().get(Constants.COUNTER_KEY);
-        long totalWords= -1;
-        try {
-            if (counterValueStr !=null) {
-                totalWords = Long.parseLong(counterValueStr);
-            }
-        }
-        catch(NumberFormatException e) {
-            e.printStackTrace(System.err);
-        }
 		for (Text value : values) {
 			String seperator = "\t";
 			String decade = key.toString().split(seperator)[0];
@@ -53,6 +43,16 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 			String word2 = value.toString().split(seperator)[2];
 			String count2 = value.toString().split(seperator)[3];
 
+            String counterValueStr = context.getConfiguration().get(Constants.COUNTER_NAME_PREFIX+decade);
+            long totalWords= -1;
+            try {
+                if (counterValueStr !=null) {
+                    totalWords = Long.parseLong(counterValueStr);
+                }
+            }
+            catch(NumberFormatException e) {
+                e.printStackTrace(System.err);
+            }
 
 			String valueToEmit = String.join(
 					Stage3Mapper.SEPERATOR,

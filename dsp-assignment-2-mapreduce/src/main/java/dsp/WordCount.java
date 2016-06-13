@@ -28,12 +28,7 @@ public class WordCount implements MapReduceTask {
             System.out.println();
             Job job = wc.getJob(conf, new Path(args[1]),new Path(args[2]),"word count");
             success = job.waitForCompletion(true);
-
-            long value = job.getCounters().findCounter(Constants.Counters.WORD).getValue();
-            System.out.println("Got " +
-                    value +
-                    " words in total. writing it to S3");
-            CounterHandler.writeCounter(Constants.Counters.WORD,job);
+            CounterHandler.writeCounters(job);
 
             //System.exit(success ? 0 : 1);
         }
