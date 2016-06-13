@@ -33,8 +33,8 @@ public class WordCount implements MapReduceTask {
             System.out.println("Got " +
                     value +
                     " words in total. writing it to S3");
-            //TODO
-            //CounterHandler.writeCounter(value);
+            CounterHandler.writeCounter(Constants.Counters.WORD,job);
+
             //System.exit(success ? 0 : 1);
         }
         catch (Exception e) {

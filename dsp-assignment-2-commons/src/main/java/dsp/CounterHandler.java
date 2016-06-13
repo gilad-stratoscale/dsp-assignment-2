@@ -1,30 +1,39 @@
 package dsp;
 
+import com.amazonaws.AmazonClientException;
 import org.apache.hadoop.mapreduce.Job;
 
 import java.io.*;
 import java.nio.charset.Charset;
 
+import static org.apache.hadoop.yarn.webapp.hamlet.HamletSpec.InputType.file;
+
 public class CounterHandler {
-    public static boolean writeCounter(String bucketName, Constants.Counters counterEnum, Job context ) {
+    private static final String FOLDER_PREFIX = "counters/";
+
+    public static boolean writeCounter(Constants.Counters counterEnum, Job context ) {
         long l=0;
         try {
             l = context.getCounters().findCounter(counterEnum).getValue();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Counters "+counterEnum.name()+" not found.");
+            e.printStackTrace(System.err);
+            return false;
         }
-        return writeCounter(bucketName,counterEnum,l);
+        return writeCounter(counterEnum,l);
     }
 
-    public static boolean writeCounter(String bucketName, Constants.Counters counterEnum, long counterValue) {
+    public static boolean writeCounter(Constants.Counters counterEnum, long counterValue) {
         InputStream is=null;
         String counterName=counterEnum.name();
         byte[] data = Charset.forName("UTF-8").encode("" + counterValue).array();
         try {
             is = new ByteArrayInputStream(data);
-            boolean b = S3Utils.uploadFile(bucketName, counterName, is, data.length);
+            boolean b = S3Utils.uploadFile(Constants.CounterBucket, FOLDER_PREFIX+counterName, is, data.length);
             return b;
+        }
+        catch(AmazonClientException e) {
+            e.printStackTrace(System.err);
+            return false;
         }
         finally {
             if (is!=null) {
@@ -38,20 +47,20 @@ public class CounterHandler {
         }
     }
 
-    public static boolean readCounter(String bucketName, Constants.Counters counterEnum, Job context) {
+    public static long readCounter(Constants.Counters counterEnum) {
         String counterName = counterEnum.name();
         BufferedReader br=null;
         try {
-            File file = S3Utils.downloadFile(bucketName,counterName);
-            br = new BufferedReader(new FileReader(file));
+            InputStream fileInputStream = S3Utils.getFileInputStream(Constants.CounterBucket, FOLDER_PREFIX + counterName);
+            br = new BufferedReader(new InputStreamReader(fileInputStream));
             String s = br.readLine();
+            System.out.println("read counter: read line is: "+s);
             long counterValue = Long.parseLong(s);
-            context.getCounters().findCounter(counterEnum).setValue(counterValue);
-            return true;
+            return counterValue;
         }
-        catch (IOException | NumberFormatException e) {
+        catch (IOException | NumberFormatException | AmazonClientException e) {
             e.printStackTrace(System.err);
-            return false;
+            return 0;
         }
         finally {
             try {

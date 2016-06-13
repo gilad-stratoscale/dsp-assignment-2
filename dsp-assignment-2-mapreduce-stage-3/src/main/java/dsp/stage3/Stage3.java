@@ -1,5 +1,7 @@
 package dsp.stage3;
 
+import dsp.Constants;
+import dsp.CounterHandler;
 import dsp.FirstWordPartitioner;
 import dsp.MapReduceTask;
 import org.apache.hadoop.conf.Configuration;
@@ -20,11 +22,23 @@ public class Stage3 implements MapReduceTask {
             System.out.println("\t"+arg);
         }
         System.out.println();
+        long counter =-1;
+        try {
+            counter = CounterHandler.readCounter(Constants.Counters.WORD);
+            System.out.println("counter read from s3: "+counter);
+        }
+        catch(Throwable t) {
+            System.err.println("Failed to read counter from s3: ");
+            t.printStackTrace(System.err);
+        }
+        System.out.println();
 
         Configuration conf = new Configuration();
+        conf.set(Constants.COUNTER_KEY,""+counter);
         Stage3 stage3 = new Stage3();
         Job job = stage3.getJob(conf, new Path(args[1]), new Path(args[2]),"stage3");
         boolean success = job.waitForCompletion(true);
+
         //System.exit(success ? 0 : 1);
 	}
 

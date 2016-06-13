@@ -1,6 +1,7 @@
 package dsp.stage2;
 
 import dsp.Constants;
+import dsp.CounterHandler;
 import dsp.FirstWordPartitioner;
 import dsp.MapReduceTask;
 import org.apache.hadoop.conf.Configuration;
@@ -21,15 +22,16 @@ public class Stage2 implements MapReduceTask {
         for (String arg: args) {
             System.out.println("\t"+arg);
         }
-
+        System.out.println();
         Configuration conf = new Configuration();
+
         Stage2 stage2 = new Stage2();
         Job job = stage2.getJob(conf,new Path(args[1]),new Path(args[2]),"stage 2");
-        System.out.println();
-        System.out.println("STAGE 2: check if counters are updated between steps:");
+
 
         boolean success = job.waitForCompletion(true);
-        System.out.println("word count counter = "+job.getCounters().findCounter(Constants.Counters.WORD).getValue());
+
+
         //System.exit(success ? 0 : 1);
 	}
 

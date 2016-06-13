@@ -21,7 +21,7 @@ public class Stage3MapperTest {
 	}
 
 
-	@Test
+	//@Test
 	public void map1() throws Exception {
 		String word = "abc";
 		String year = "1980";
@@ -38,7 +38,7 @@ public class Stage3MapperTest {
 		mapDriver.runTest();
 	}
 
-	@Test
+	//@Test
 	public void map2() throws Exception {
 		String word1 = "abc";
 		String word2 = "def";
@@ -56,7 +56,7 @@ public class Stage3MapperTest {
 		mapDriver.runTest();
 	}
 
-	@Test
+	//@Test
 	public void getKeyPostfix(){
 		String keyPostfix = Stage3Mapper.getKeyPostfix(String.join(
 				Stage3Mapper.SEPERATOR,

@@ -21,7 +21,7 @@ public class Stage3ReducerTest {
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
-	@Test
+	//@Test
 	public void reduce() throws Exception {
 
 		String year = "1660",
