@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class TokenizerMapper
 		extends Mapper<Object, Text, Text, LongWritable> {
 
+	public static final int MIN_DECADE = 1900;
 	private StopWordsFilter filter = new StopWordsFilter();
 	//final static Logger logger = Logger.getLogger(TokenizerMapper.class);
 
@@ -30,6 +31,9 @@ public class TokenizerMapper
 		incrementWordCounter(context, ngram);
 
 		int decade = getDecade(splits[1]);
+		if (decade < MIN_DECADE) {
+			return;
+		}
 		LongWritable count = new LongWritable(Long.parseLong(splits[2]));
 
 		if (ngram.split(" ").length < 0) {
