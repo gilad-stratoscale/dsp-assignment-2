@@ -24,6 +24,8 @@ public class EmrUtils {
     public static final String JAR1_URL = "s3://dsp2-emr-bucket/jars/s1.jar";
     public static final String JAR2_URL = "s3://dsp2-emr-bucket/jars/s2.jar";
     public static final String JAR3_URL = "s3://dsp2-emr-bucket/jars/s3.jar";
+    private static final String JAR4_URL = "s3://dsp2-emr-bucket/jars/s4.jar";
+    private static final String PARTB_JAR_URL = "s3://dsp2-emr-bucket/jars/b.jar";
 
 
     public static RunJobFlowResult createCluster(List<StepConfig> jarStepConfigs, String s3LogUri, int instanceCount, String jobName){
@@ -112,11 +114,16 @@ public class EmrUtils {
         Collection<String> argus1 = new ArrayList<>();
         Collection<String> argus2 = new ArrayList<>();
         Collection<String> argus3 = new ArrayList<>();
+        Collection<String> argus4 = new ArrayList<>();
+        Collection<String> argus5 = new ArrayList<>();
+
         String inputPath = "s3://dsp2-emr-bucket/input";
         String outputPathPrefix = "s3://dsp2-emr-bucket/output/";
         String out1 = outputPathPrefix + uuid.toString() + "/out1";
         String out2 = outputPathPrefix + uuid.toString() + "/out2";
         String out3 = outputPathPrefix + uuid.toString() + "/out3";
+        String partaOutKey =  "output/"+uuid.toString() + "/result";
+        String partbOut = outputPathPrefix + uuid.toString() + "/partB";
 
         argus1.add(inputPath);
         argus1.add(out1);
@@ -131,9 +138,21 @@ public class EmrUtils {
         argus3.add(out3);
         JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3");
 
+        argus4.add(out3);
+        argus4.add(partaOutKey);
+        //TODO check if 0 or 1
+        argus4.add(args[0]);
+        JarStepConfig step4 = new JarStepConfig(JAR4_URL,"dsp.TopStep",argus4,"part-a-result");
+
+        argus5.add(out3);
+        argus5.add(partbOut);
+        JarStepConfig step5 = new JarStepConfig(PARTB_JAR_URL,"dsp.partB.PartB",argus5,"part-b");
+
         jarSteps.add(EmrUtils.createJarStep(step1));
         jarSteps.add(EmrUtils.createJarStep(step2));
         jarSteps.add(EmrUtils.createJarStep(step3));
+        jarSteps.add(EmrUtils.createJarStep(step4));
+        jarSteps.add(EmrUtils.createJarStep(step5));
 
         String s3LogUri = "s3://dsp2-emr-bucket/logs/testlog"+ uuid.toString() +".log";
         EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "DSP2");
