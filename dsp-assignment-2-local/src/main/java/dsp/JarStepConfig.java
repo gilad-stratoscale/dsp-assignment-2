@@ -11,11 +11,13 @@ public class JarStepConfig {
     String cp;
     Collection<String> args;
     String stepName;
+    boolean terminateOnFailure;
 
-    public JarStepConfig(String jarUrl, String cp, Collection<String> args, String stepName) {
+    public JarStepConfig(String jarUrl, String cp, Collection<String> args, String stepName,boolean terminateOnFailure) {
         this.jarUrl = jarUrl;
         this.cp = cp;
         this.args=args;
         this.stepName = stepName;
+        this.terminateOnFailure=terminateOnFailure;
     }
 }

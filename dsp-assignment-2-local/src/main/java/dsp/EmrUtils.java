@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmrUtils {
     // TODO: config optimal number?
-    public static final int INSTANCE_COUNT = 3;
+    public static final int INSTANCE_COUNT = 2;
     public static final String MASTER_INSTANCE_TYPE = "m3.xlarge";
     public static final String SLAVE_INSTANCE_TYPE = "m1.large";
     private static final boolean debugStep = false;
@@ -93,10 +93,10 @@ public class EmrUtils {
     }
 
     public static StepConfig createJarStep(JarStepConfig c) {
-        return createJarStep(c.jarUrl,c.cp,c.args,c.stepName);
+        return createJarStep(c.jarUrl,c.cp,c.args,c.stepName,c.terminateOnFailure);
     }
 
-    public static StepConfig createJarStep(String jarS3Url, String classPath, Collection<String> arguments, String stepName) {
+    public static StepConfig createJarStep(String jarS3Url, String classPath, Collection<String> arguments, String stepName,boolean terminateOnFailure) {
         HadoopJarStepConfig jarConfig = new HadoopJarStepConfig()
                 .withJar(jarS3Url)
                 .withArgs(arguments); // nullable
@@ -105,6 +105,9 @@ public class EmrUtils {
         }
 
         StepConfig jarStep = new StepConfig(stepName, jarConfig);
+        if (!terminateOnFailure) {
+            jarStep.withActionOnFailure("TERMINATE_JOB_FLOW");
+        }
         return jarStep;
     }
 
@@ -122,31 +125,32 @@ public class EmrUtils {
         String out1 = outputPathPrefix + uuid.toString() + "/out1";
         String out2 = outputPathPrefix + uuid.toString() + "/out2";
         String out3 = outputPathPrefix + uuid.toString() + "/out3";
+        String partaInKey =  "output/"+uuid.toString() + "/out3";
         String partaOutKey =  "output/"+uuid.toString() + "/result";
         String partbOut = outputPathPrefix + uuid.toString() + "/partB";
 
         argus1.add(inputPath);
         argus1.add(out1);
         JarStepConfig step1 = new JarStepConfig(JAR1_URL,
-                "dsp.WordCount",argus1,"wordcount");
+                "dsp.WordCount",argus1,"wordcount",true);
 
         argus2.add(out1);
         argus2.add(out2);
-        JarStepConfig step2 = new JarStepConfig(JAR2_URL,"dsp.Stage2",argus2,"step2");
+        JarStepConfig step2 = new JarStepConfig(JAR2_URL,"dsp.Stage2",argus2,"step2",true);
 
         argus3.add(out2);
         argus3.add(out3);
-        JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3");
+        JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3",true);
 
-        argus4.add(out3);
+        argus4.add(partaInKey);
         argus4.add(partaOutKey);
-        //TODO check if 0 or 1
+        System.out.println("N="+args[0]);
         argus4.add(args[0]);
-        JarStepConfig step4 = new JarStepConfig(JAR4_URL,"dsp.TopStep",argus4,"part-a-result");
+        JarStepConfig step4 = new JarStepConfig(JAR4_URL,"dsp.TopStep",argus4,"part-a-result",false);
 
         argus5.add(out3);
         argus5.add(partbOut);
-        JarStepConfig step5 = new JarStepConfig(PARTB_JAR_URL,"dsp.partB.PartB",argus5,"part-b");
+        JarStepConfig step5 = new JarStepConfig(PARTB_JAR_URL,"dsp.partB.PartB",argus5,"part-b",true);
 
         jarSteps.add(EmrUtils.createJarStep(step1));
         jarSteps.add(EmrUtils.createJarStep(step2));

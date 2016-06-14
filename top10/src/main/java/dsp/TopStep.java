@@ -8,62 +8,67 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static com.sun.tools.javac.util.Log.outKey;
+
 /**
  * Created by thinkPAD on 6/13/2016.
  */
 public class TopStep {
 
-    public static final String USAGE_WARNING = "Usage: args={classpath, input inPath, outputPath, n}. exiting";
+    public static final String USAGE_WARNING = "WARNING. Usage: args={classpath, input inPath, outputPath, n}. ";
+    public static final int DEFAULT_N = 10;
+    public static final String SUCCESS_POSTFIX = "_SUCCESS";
     private static TreeMap<Integer, TreeSet<TopTuple>> decadeMap;
     private static final int numberOfDecades = 12;
     private static final int firstDecade = 1900;
-
+    private static int n;
 
 
     /**
      * @param args = {classpath, input path, output path , N (top words per decade)}
      */
     public static void main(String[] args) {
+        System.out.println("starting top step.");
+        System.err.println("args given:");
+        for (int i=0; i<args.length; i++) {
+            System.err.println("\t"+args[i]);
+        }
         if (args.length < 4 ) {
             System.err.println(USAGE_WARNING);
-            System.err.println("args given:");
-            for (int i=0; i<args.length; i++) {
-                System.err.println("\t"+args[i]);
-            }
-            System.exit(1);
         }
+
         String inPath = args[1];
         String outKey = args[2];
-        int n=0;
         try {
-            n = Integer.parseInt(args[2]);
+            n = Integer.parseInt(args[3]);
         }
         catch(NumberFormatException e ) {
+            System.err.println("failed to parse N. falling back to default = 10");
             System.err.println(USAGE_WARNING);
-            System.exit(1);
+            n = DEFAULT_N;
         }
         decadeMap = new TreeMap<>();
 
         List<String> fileNames = S3Utils.getFileNames(Constants.BUCKET_NAME, inPath);
+
         for (String filename : fileNames) {
-            parseFile(filename);
+            if (!filename.endsWith(SUCCESS_POSTFIX)) {
+                parseFile(filename);
+            }
         }
         StringBuilder sb =new StringBuilder();
         sb.append("Top Related Words Summary:\n");
         for (int j = 0, decade = firstDecade; j< numberOfDecades; j++, decade+=10) {
             TreeSet<TopTuple> topTuples = decadeMap.get(new Integer(decade));
-            sb.append("\tdecade "+decade+":");
+            sb.append("\n\tdecade "+decade+":\n");
             if (topTuples == null) {
                 continue;
             }
-            for (int i = 0; i < n; i++) {
-                TopTuple first = topTuples.first();
-                if (first != null) {
-                    topTuples.remove(first);
-                    sb.append("\t\t"+first.toString());
-                }
+            for (TopTuple tt : topTuples) {
+                sb.append("\t\t"+tt.toString()+"\n");
             }
         }
+        System.out.println("writing to file:\n"+sb.toString());
         writeResultToFile(sb,outKey);
     }
 
@@ -88,14 +93,20 @@ public class TopStep {
             while((line = in.readLine()) != null) {
                 String[] values = line.split("\t");
                 int decade = Integer.parseInt(values[0]);
-                String first = values[1];
-                String second = values[2];
-                double pmi = Double.parseDouble(values[11]);
+                String[] words = values[1].split(" ");
+                String first = words[0];
+                String second = words[1];
+                double pmi = Double.parseDouble(values[7]);
                 TreeSet<TopTuple> topTuples = decadeMap.get(new Integer(decade));
                 if (null == topTuples) {
-                    decadeMap.put(new Integer(decade),new TreeSet<>());
+                    topTuples = new TreeSet<>();
+                    decadeMap.put(new Integer(decade), topTuples);
                 }
                 topTuples.add(new TopTuple(first,second,pmi));
+                if (topTuples.size() > n) {
+                    TopTuple smallest = topTuples.first();
+                    topTuples.remove(smallest);
+                }
             }
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
