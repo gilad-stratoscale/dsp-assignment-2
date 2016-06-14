@@ -1,6 +1,5 @@
 package dsp;
 
-import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -35,7 +34,6 @@ public class TokenizerMapper
             if (decade < MIN_DECADE) {
                 return;
             }
-            incrementWordCounter(context, ngram, decade);
             LongWritable count = new LongWritable(Long.parseLong(splits[2]));
 
             if (ngram.split(" ").length < 0) {

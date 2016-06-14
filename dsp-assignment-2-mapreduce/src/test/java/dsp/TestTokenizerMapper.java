@@ -154,7 +154,7 @@ public class TestTokenizerMapper {
 	public void testCounter() throws IOException {
 		mapDriver.withInput(new LongWritable(1), new Text("aaa leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.run();
-		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.Counters.DECADE_1980).getValue());
+		Assert.assertEquals(6, mapDriver.getCounters().findCounter(Constants.Counters.DECADE_1980).getValue());
 	}
 
 
