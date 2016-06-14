@@ -139,8 +139,7 @@ public class EmrUtils {
         String out1 = outputPathPrefix + uuid.toString() + "/out1";
         String out2 = outputPathPrefix + uuid.toString() + "/out2";
         String out3 = outputPathPrefix + uuid.toString() + "/out3";
-        String partaInKey =  "output/"+uuid.toString() + "/out3";
-        String partaOutKey =  "output/"+uuid.toString() + "/result";
+        String out4 =  outputPathPrefix+uuid.toString() + "/result";
         String partbOut = outputPathPrefix + uuid.toString() + "/partB";
 
         argus1.add(inputPath);
@@ -156,11 +155,11 @@ public class EmrUtils {
         argus3.add(out3);
         JarStepConfig step3 = new JarStepConfig(JAR3_URL,"dsp.Stage3",argus3,"step3",true);
 
-        argus4.add(partaInKey);
-        argus4.add(partaOutKey);
+        argus4.add(out3);
+        argus4.add(out4);
         System.out.println("N="+args[0]);
         argus4.add(args[0]);
-        JarStepConfig step4 = new JarStepConfig(JAR4_URL,"dsp.TopStep",argus4,"part-a-result",false);
+        JarStepConfig step4 = new JarStepConfig(JAR4_URL,"dsp.topN.TopN",argus4,"part-a-result",false);
 
         argus5.add(out3);
         argus5.add(partbOut);
