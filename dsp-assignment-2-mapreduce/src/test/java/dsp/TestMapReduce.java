@@ -51,6 +51,14 @@ public class TestMapReduce {
 		mapReduceDriver.runTest();
 	}
 
+	@Test
+	public void testMapReduceSameWord() throws IOException {
+		addInput("aaaa aaaa aaaa aaaa\t1900\t2\t2\t2");
+		mapReduceDriver.withOutput(new Text("1900\taaaa"), new LongWritable(12));
+		mapReduceDriver.withOutput(new Text("1900\taaaa aaaa"), new LongWritable(6));
+		mapReduceDriver.runTest();
+	}
+
 	private void addInput(String text) {
 		mapReduceDriver.withInput(
 				new Text(),// Just for serialization...

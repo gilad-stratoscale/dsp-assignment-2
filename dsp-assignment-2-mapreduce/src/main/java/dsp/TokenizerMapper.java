@@ -52,12 +52,11 @@ public class TokenizerMapper
 		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ").trim();
 		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
 
-		for (String s : trimWhitspaces.split(" ")) {
-			context.write(new Text(decade + "\t" + s), count);
-
-		}
 		for (String twoGram : twoGrams) {
 			context.write(new Text(decade + "\t" + twoGram), count);
+			for (String word : twoGram.split(" ")) {
+				context.write(new Text(decade + "\t" + word), count);
+			}
 		}
 
 	}
