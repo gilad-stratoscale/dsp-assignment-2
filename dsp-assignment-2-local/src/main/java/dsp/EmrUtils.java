@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmrUtils {
     // TODO: config optimal number?
-    public static final int INSTANCE_COUNT = 18;
+    public static final int INSTANCE_COUNT = 19;
     public static final String MASTER_INSTANCE_TYPE = "m3.xlarge";
     public static final String SLAVE_INSTANCE_TYPE = "m1.large";
     private static final boolean debugStep = false;

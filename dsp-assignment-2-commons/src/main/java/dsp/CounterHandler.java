@@ -24,7 +24,8 @@ public class CounterHandler {
     public static boolean writeCounter(Constants.Counters counterEnum, long counterValue) {
         InputStream is=null;
         String counterName=counterEnum.name();
-        byte[] data = Charset.forName("UTF-8").encode("" + counterValue).array();
+        byte[] data = String.valueOf(counterValue).getBytes();
+        //byte[] data = Charset.forName("UTF-8").encode("" + counterValue).array();
         try {
             is = new ByteArrayInputStream(data);
             boolean b = S3Utils.uploadFile(Constants.BUCKET_NAME, FOLDER_PREFIX+counterName, is, data.length);
@@ -83,5 +84,9 @@ public class CounterHandler {
         for (Constants.Counters counter : Constants.Counters.values()) {
             conf.set(counter.name(), String.valueOf(readCounter(counter)));
         }
+    }
+
+    public static void main(String args[]) {
+        writeCounter(Constants.Counters.DECADE_1900,12345678912l);
     }
 }
