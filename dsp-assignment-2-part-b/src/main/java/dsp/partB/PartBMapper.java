@@ -13,12 +13,14 @@ public class PartBMapper extends Mapper<Object, Text, Text, Text> {
 	@Override
 	protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
-		String w1 = value.toString().split("\t")[1].split(" ")[0],
+		String
+				decade = value.toString().split("\t")[0],
+				w1 = value.toString().split("\t")[1].split(" ")[0],
 				w2 = value.toString().split("\t")[1].split(" ")[1],
 				pmi = value.toString().split("\t")[7];
 
 		if (RelatedWords.checkIfRelated(w1, w2) || UnrelatedWords.checkIfUnrelated(w1, w2)) {
-			context.write(new Text(""), new Text(String.join("\t", w1, w2, pmi)));
+			context.write(new Text(decade), new Text(String.join("\t", w1, w2, pmi)));
 		}
 	}
 }

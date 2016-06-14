@@ -31,8 +31,8 @@ public class PartBMapperTest {
 				withInput(new Text(""), new Text(
 						// words that were not tagged
 						"1810\ta b\t1\tb\t1\ta\t1\t3.97814814")).
-				withOutput(new Text(""), new Text("tiger\tfeline\t7.0812413")).
-				withOutput(new Text(""), new Text("stock\tlive\t2.86791248"));
+				withOutput(new Text("1790"), new Text("tiger\tfeline\t7.0812413")).
+				withOutput(new Text("1810"), new Text("stock\tlive\t2.86791248"));
 		mapDriver.runTest();
 	}
 

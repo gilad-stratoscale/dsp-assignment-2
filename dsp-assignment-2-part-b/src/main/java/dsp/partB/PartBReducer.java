@@ -35,6 +35,6 @@ public class PartBReducer extends Reducer<Text, Text, Text, Text> {
 			}
 
 		}
-		context.write(new Text(""), new Text("fscore:" + fscore + " pmi threshold:" + threshold));
+		context.write(new Text("decade: " + key.toString()), new Text("fscore:" + fscore + " pmi threshold:" + threshold));
 	}
 }
