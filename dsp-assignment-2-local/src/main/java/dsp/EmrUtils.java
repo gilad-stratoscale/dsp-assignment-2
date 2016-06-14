@@ -10,7 +10,7 @@ import java.util.*;
 
 public class EmrUtils {
     // TODO: config optimal number?
-    public static final int INSTANCE_COUNT = 2;
+    public static final int INSTANCE_COUNT = 18;
     public static final String MASTER_INSTANCE_TYPE = "m3.xlarge";
     public static final String SLAVE_INSTANCE_TYPE = "m1.large";
     private static final boolean debugStep = false;
@@ -62,7 +62,11 @@ public class EmrUtils {
                         .withMasterInstanceType(MASTER_INSTANCE_TYPE)
                         .withSlaveInstanceType(SLAVE_INSTANCE_TYPE));
         RunJobFlowResult result = emr.runJobFlow(request);
+
+
         return result;
+
+
     }
 
     private static Configuration getJava8Config() {
@@ -106,7 +110,10 @@ public class EmrUtils {
 
         StepConfig jarStep = new StepConfig(stepName, jarConfig);
         if (!terminateOnFailure) {
-            jarStep.withActionOnFailure("TERMINATE_JOB_FLOW");
+            jarStep.withActionOnFailure(ActionOnFailure.CONTINUE);
+        }
+        else {
+            jarStep.withActionOnFailure(ActionOnFailure.TERMINATE_JOB_FLOW);
         }
         return jarStep;
     }
@@ -120,7 +127,7 @@ public class EmrUtils {
         Collection<String> argus4 = new ArrayList<>();
         Collection<String> argus5 = new ArrayList<>();
 
-        String inputPath = "s3://dsp2-emr-bucket/input";
+        String inputPath = "s3://datasets.elasticmapreduce/ngrams/books/20090715/eng-gb-all/5gram/data";
         String outputPathPrefix = "s3://dsp2-emr-bucket/output/";
         String out1 = outputPathPrefix + uuid.toString() + "/out1";
         String out2 = outputPathPrefix + uuid.toString() + "/out2";

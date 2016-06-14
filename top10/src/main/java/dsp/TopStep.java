@@ -42,13 +42,12 @@ public class TopStep {
         try {
             n = Integer.parseInt(args[3]);
         }
-        catch(NumberFormatException e ) {
+        catch(NumberFormatException | ArrayIndexOutOfBoundsException e ) {
             System.err.println("failed to parse N. falling back to default = 10");
             System.err.println(USAGE_WARNING);
             n = DEFAULT_N;
         }
         decadeMap = new TreeMap<>();
-
         List<String> fileNames = S3Utils.getFileNames(Constants.BUCKET_NAME, inPath);
 
         for (String filename : fileNames) {

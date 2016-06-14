@@ -1,5 +1,6 @@
 package dsp;
 
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -23,42 +24,50 @@ public class TokenizerMapper
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 
-        System.out.println("WORD COUNT SAYS: Got key=\n" + key + "\nValue=\n" + value.toString());
+        try {
 
-		String[] splits = value.toString().split("\t");
-		String ngram = splits[0].toLowerCase();
+		    String[] splits = value.toString().split("\t");
+            if (splits.length < 2) {
+                return;
+            }
+            String ngram = splits[0].toLowerCase();
+            int decade = getDecade(splits[1]);
+            if (decade < MIN_DECADE) {
+                return;
+            }
+            incrementWordCounter(context, ngram, decade);
+            LongWritable count = new LongWritable(Long.parseLong(splits[2]));
 
+            if (ngram.split(" ").length < 0) {
+                return;
+            }
 
-        int decade = getDecade(splits[1]);
-        if (decade < MIN_DECADE) {
-            return;
+            String withoutPunctuationAndNumbers = removePunctuationAndNumbers(ngram);
+            String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers);
+
+            if (withoutStopWords.length() == 0) {
+                return;
+            }
+
+            // Due to removing punctuation, numbers and stopwords there might be a situation in which
+            // there are 2 spaces in a row
+            String trimWhitspaces = withoutStopWords.replaceAll("\\s+", " ").trim();
+            List<String> twoGrams = ngramTo2gram(trimWhitspaces);
+
+            for (String twoGram : twoGrams) {
+                context.write(new Text(decade + "\t" + twoGram), count);
+                for (String word : twoGram.split(" ")) {
+                    context.write(new Text(decade + "\t" + word), count);
+                }
+                incrementWordCounter(context, twoGram, decade);
+            }
         }
-        incrementWordCounter(context, ngram,decade);
-        LongWritable count = new LongWritable(Long.parseLong(splits[2]));
-
-		if (ngram.split(" ").length < 0) {
-			return;
-		}
-
-        String withoutPunctuationAndNumbers = removePunctuationAndNumbers(ngram);
-		String withoutStopWords = removeStopWords(withoutPunctuationAndNumbers);
-
-		if (withoutStopWords.length() == 0) {
-			return;
-		}
-
-		// Due to removing punctuation, numbers and stopwords there might be a situation in which
-		// there are 2 spaces in a row
-		String trimWhitspaces = withoutStopWords.replaceAll("\\s+"," ").trim();
-		List<String> twoGrams = ngramTo2gram(trimWhitspaces);
-
-		for (String twoGram : twoGrams) {
-			context.write(new Text(decade + "\t" + twoGram), count);
-			for (String word : twoGram.split(" ")) {
-				context.write(new Text(decade + "\t" + word), count);
-			}
-			incrementWordCounter(context, twoGram,decade);
-		}
+        catch(Throwable t) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("line: "+value.toString());
+            sb.append("\nkey: "+key.toString());
+            throw new RuntimeException(sb.toString(),t);
+        }
 
 	}
 
