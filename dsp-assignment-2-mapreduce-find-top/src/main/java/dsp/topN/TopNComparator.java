@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class TopNComparator implements RawComparator<Text> {
     //decade \t pmi \t first \s second
+    // decade \t ~ \t ~
 	public TopNComparator() {
 		super();
 	}
@@ -41,6 +42,10 @@ public class TopNComparator implements RawComparator<Text> {
         String[] splits2 = s1.split("\t");
         String decade1 = splits1[0];
         String decade2 = splits2[0];
+        if (splits1.length < 2 || splits2.length < 2 || splits1[1].matches("~") || splits2[1].matches("~")) {
+            return decade1.compareTo(decade2);
+        }
+
         String words1 = splits1[2];
         String words2 = splits2[2];
         try {
@@ -68,5 +73,6 @@ public class TopNComparator implements RawComparator<Text> {
         System.out.println(comp.compareStrings(s2,s4) > 0);
         System.out.println(comp.compareStrings(s3,s1) < 0);
         System.out.println(comp.compareStrings(s4,s3) > 0);
+        System.out.println(comp.compareStrings("1920\t~\t~",s3) > 0);
     }
 }
