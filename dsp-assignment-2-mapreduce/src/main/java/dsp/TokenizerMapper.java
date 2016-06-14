@@ -57,6 +57,7 @@ public class TokenizerMapper
 			for (String word : twoGram.split(" ")) {
 				context.write(new Text(decade + "\t" + word), count);
 			}
+			incrementWordCounter(context, twoGram,decade);
 		}
 
 	}
