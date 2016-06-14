@@ -23,7 +23,7 @@ public class PartB implements MapReduceTask{
 	public static void main(String[] args) throws Exception {
 		Configuration conf = new Configuration();
 		Job job = new PartB().getJob(conf, new Path(args[1]), new Path(args[2]),"partB");
-		System.exit(job.waitForCompletion(true) ? 0 : 1);
+		job.waitForCompletion(true);
 
 		try {
 			String output = "MAP_OUTPUT_RECORDS for part b: " + job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
