@@ -19,21 +19,25 @@ public class TopNReducer extends Reducer<Text, Text, Text, Text> {
 
 		String pmi = getPmi(key.toString());
 		if (pmi.contains("~")) {
-			if (set != null) {
+			if (set != null && (set.size() < N)) {
 				writeToContext(context);
-				set = null;
 			}
+			set = null;
+
 			return;
 		}
 
 		if (set == null){
 			set = new TreeSet<>();
 		}
+		if (set.size() == N) {
+			return;// we have written it in previous iteration
+		}
 
 		set.add(key.toString());
+		if (set.size() == N) {
+			writeToContext(context);
 
-		if (set.size() > N) {
-			cleanSet(set, N);
 		}
 	}
 
@@ -50,7 +54,8 @@ public class TopNReducer extends Reducer<Text, Text, Text, Text> {
 	String getDecade(Text key) {
 		return key.toString().split("\t")[0];
 	}
-	String getPmi(String key) {
+
+	private String getPmi(String key) {
 		return key.split("\t")[1];
 	}
 

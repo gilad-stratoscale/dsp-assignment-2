@@ -28,30 +28,29 @@ public class TopNReducerTest {
 	public void reduce() throws Exception {
 		reduceDriver.getConfiguration().setInt("N",2);
 		List<Text> lst = Collections.singletonList(new Text(""));
-		reduceDriver.withInput(new Text("1980\t123.1231\taaa bbb"),lst);
-		reduceDriver.withInput(new Text("1980\t124.1231\tccc bbb"),lst);
 		reduceDriver.withInput(new Text("1980\t125.1231\tddd bbb"),lst);
+		reduceDriver.withInput(new Text("1980\t124.1231\tccc bbb"),lst);
+		reduceDriver.withInput(new Text("1980\t123.1231\taaa bbb"),lst);
 		reduceDriver.withInput(new Text("1980\t~\t~"),lst);
 		reduceDriver.withInput(new Text("1980\t~\t~"),lst);
 		reduceDriver.withInput(new Text("1980\t~\t~"),lst);
-
-
-		reduceDriver.withInput(new Text("1990\t123.1231\taaa bbb"),lst);
-		reduceDriver.withInput(new Text("1990\t124.1231\tccc bbb"),lst);
-		reduceDriver.withInput(new Text("1990\t125.1231\tddd bbb"),lst);
-		reduceDriver.withInput(new Text("1990\t~\t~"),lst);
-		reduceDriver.withInput(new Text("1990\t~\t~"),lst);
-		reduceDriver.withInput(new Text("1990\t~\t~"),lst);
 
 
 		reduceDriver.withOutput(new Text("1980\t124.1231\tccc bbb"), new Text(""));
 		reduceDriver.withOutput(new Text("1980\t125.1231\tddd bbb"), new Text(""));
-
-
-		reduceDriver.withOutput(new Text("1990\t124.1231\tccc bbb"), new Text(""));
-		reduceDriver.withOutput(new Text("1990\t125.1231\tddd bbb"), new Text(""));
 		reduceDriver.runTest();
+	}
 
+	@Test
+	public void reduce2() throws Exception {
+		reduceDriver.getConfiguration().setInt("N",2);
+		List<Text> lst = Collections.singletonList(new Text(""));
+		reduceDriver.withInput(new Text("1980\t125.1231\tddd bbb"),lst);
+		reduceDriver.withInput(new Text("1980\t~\t~"),lst);
+
+
+		reduceDriver.withOutput(new Text("1980\t125.1231\tddd bbb"), new Text(""));
+		reduceDriver.runTest();
 	}
 
 	@Test
