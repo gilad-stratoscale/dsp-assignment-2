@@ -17,6 +17,7 @@
         <module>dsp-assignment-2-commons</module>
         <module>dsp-assignment-2-part-b</module>
         <module>top10</module>
+        <module>dsp-assignment-2-mapreduce-find-top</module>
     </modules>
 
     <build>
