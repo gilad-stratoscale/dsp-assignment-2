@@ -6,7 +6,7 @@ import org.junit.Test;
  * Created by thinkPAD on 6/12/2016.
  */
 public class CounterHandlerTest {
-    //@Test
+    @Test
     public void testCounterWrite(){
         CounterHandler.writeCounter(Constants.Counters.DECADE_1900,123);
     }

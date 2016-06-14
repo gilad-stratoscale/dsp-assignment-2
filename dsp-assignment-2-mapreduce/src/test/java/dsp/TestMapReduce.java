@@ -22,14 +22,14 @@ public class TestMapReduce {
 		mapReduceDriver = MapReduceDriver.newMapReduceDriver(mapper, reducer);
 	}
 
-	//@Test
+	@Test
 	public void testMapReduce() throws IOException {
 		addInput("' leaves open the possibility\t1981\t4\t4\t3");
 		addInput("\"\"\" During the final stages\"\t1994\t3\t3\t3\n");
 		addInput("\"! \"\" \"\" It ought\"\t1893\t1\t1\t1");
 		mapReduceDriver.withOutput(new Text("1980\tleaves"), new LongWritable(4));
 		mapReduceDriver.withOutput(new Text("1980\tleaves open"), new LongWritable(4));
-		mapReduceDriver.withOutput(new Text("1980\topen"), new LongWritable(4));
+		mapReduceDriver.withOutput(new Text("1980\topen"), new LongWritable(8));
 		mapReduceDriver.withOutput(new Text("1980\topen possibility"), new LongWritable(4));
 		mapReduceDriver.withOutput(new Text("1980\tpossibility"), new LongWritable(4));
 		mapReduceDriver.withOutput(new Text("1990\tfinal"), new LongWritable(3));
@@ -42,7 +42,7 @@ public class TestMapReduce {
 	/**
 	 * regression test for a dot in the input
 	 */
-	//@Test
+	@Test
 	public void testMapReduceRegression() throws IOException {
 		addInput("\"\"\" 2 Cor . iv\"\t1900\t2\t2\t2");
 		mapReduceDriver.withOutput(new Text("1900\tcor"), new LongWritable(2));

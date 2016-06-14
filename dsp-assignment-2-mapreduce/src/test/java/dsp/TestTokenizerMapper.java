@@ -20,33 +20,34 @@ public class TestTokenizerMapper {
 		mapDriver = MapDriver.newMapDriver(mapper);
 	}
 
-	//@Test
+	@Test
 	public void testMapper() throws IOException {
 		mapDriver.withInput(new LongWritable(1), new Text("\"! \"\" \"\" It ought\"\t1893\t1\t1\t1"));
 		mapDriver.runTest();
 	}
 
-	//@Test
+	@Test
 	public void testMapper2() throws IOException {
 		mapDriver.withInput(new LongWritable(1), new Text("\"\"\" During the final stages\"\t1994\t3\t3\t3\n"));
+		mapDriver.withOutput(new Text("1990\tfinal stages"),new LongWritable(3));
 		mapDriver.withOutput(new Text("1990\tfinal"),new LongWritable(3));
 		mapDriver.withOutput(new Text("1990\tstages"),new LongWritable(3));
-		mapDriver.withOutput(new Text("1990\tfinal stages"),new LongWritable(3));
 		mapDriver.runTest();
 	}
 
-	//@Test
+	@Test
 	public void testMapper3() throws IOException {
 		mapDriver.withInput(new LongWritable(1), new Text("' leaves open the possibility\t1981\t4\t4\t3"));
+		mapDriver.withOutput(new Text("1980\tleaves open"),new LongWritable(4));
 		mapDriver.withOutput(new Text("1980\tleaves"),new LongWritable(4));
 		mapDriver.withOutput(new Text("1980\topen"),new LongWritable(4));
-		mapDriver.withOutput(new Text("1980\tpossibility"),new LongWritable(4));
-		mapDriver.withOutput(new Text("1980\tleaves open"),new LongWritable(4));
 		mapDriver.withOutput(new Text("1980\topen possibility"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\topen"),new LongWritable(4));
+		mapDriver.withOutput(new Text("1980\tpossibility"),new LongWritable(4));
 		mapDriver.runTest();
 	}
 
-	//@Test
+	@Test
 	public void testSort2Gram() {
 
 		Assert.assertEquals("aaa aaa", mapper.sort2gram("aaa aaa"));
@@ -57,19 +58,19 @@ public class TestTokenizerMapper {
 	}
 
 
-	//@Test
+	@Test
 	public void testOneGram() {
 		Assert.assertEquals(0, mapper.ngramTo2gram("aaa").size());
 	}
 
-	//@Test
+	@Test
 	public void testTwoGram() {
 		List<String> twoGrams = mapper.ngramTo2gram("aaa bbb");
 		Assert.assertEquals(1, twoGrams.size());
 		Assert.assertTrue(twoGrams.contains("aaa bbb"));
 	}
 
-	//@Test
+	@Test
 	public void testThreeGram() {
 		List<String> twoGrams = mapper.ngramTo2gram("aaa bbb ccc");
 		Assert.assertEquals(2, twoGrams.size());
@@ -129,20 +130,15 @@ public class TestTokenizerMapper {
         Assert.assertTrue(twoGrams.contains("ccc eee"));
     }
 
-//	@Test
+	@Test
 	public void testGetDecade() {
 		Assert.assertEquals(1970, mapper.getDecade("1979"));
 		Assert.assertEquals(1970, mapper.getDecade("1975"));
 		Assert.assertEquals(1970, mapper.getDecade("1970"));
 	}
 
-//	@Test
+	@Test
 	public void regressionTestSpaces() throws IOException {
-		/* Here, the only non stopword non punctuation is united, so expect empty output
-		 * Before, there was a bug that left spaces of punctuation, so " united" was splitted to
-		 * 2 words - "" and "united" and thus was considered a 2gram
-		 */
-
 		String value = "! then - united to\t1950\t3\t3\t3";
 		String key = "13000";
 
@@ -150,16 +146,15 @@ public class TestTokenizerMapper {
 				withInput(
 						new Text(key),
 						new Text(value));
-		mapDriver.withOutput(new Text("1950\tunited"), new LongWritable(3));
 		mapDriver.runTest();
 
 	}
 
-//	@Test
+	@Test
 	public void testCounter() throws IOException {
 		mapDriver.withInput(new LongWritable(1), new Text("aaa leaves open the possibility\t1981\t4\t4\t3"));
 		mapDriver.run();
-		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.Counters.DECADE_1900).getValue());
+		Assert.assertEquals(5, mapDriver.getCounters().findCounter(Constants.Counters.DECADE_1980).getValue());
 	}
 
 

@@ -20,7 +20,7 @@ public class TestIntSumReducer {
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
-	//@Test
+	@Test
 	public void testMapper() throws IOException {
 		List<LongWritable> values = new ArrayList();
 		values.add(new LongWritable(1));
