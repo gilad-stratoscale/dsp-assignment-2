@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class S3Utils {
@@ -219,6 +220,23 @@ public class S3Utils {
         }
 
         return tmpTweetFile;
+    }
+
+    public static File downloadFile2(String bucketName, String key) throws IOException {
+        File file = new File("temp"+ UUID.randomUUID());
+        file.setWritable(true);
+        file.deleteOnExit();
+        InputStream fileInputStream = getFileInputStream(bucketName, key);
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+        int read;
+        byte[] bytes = new byte[1024];
+
+        while ((read = fileInputStream.read(bytes)) != -1) {
+            fileOutputStream.write(bytes, 0, read);
+        }
+
+        return file;
     }
 
     /**

@@ -60,7 +60,8 @@ public class EmrUtils {
                         .withInstanceCount(instanceCount)
                         .withKeepJobFlowAliveWhenNoSteps(keepJobFlowAliveWhenNoSteps)
                         .withMasterInstanceType(MASTER_INSTANCE_TYPE)
-                        .withSlaveInstanceType(SLAVE_INSTANCE_TYPE));
+                        .withSlaveInstanceType(SLAVE_INSTANCE_TYPE))
+                .withVisibleToAllUsers(true);
         RunJobFlowResult result = emr.runJobFlow(request);
 
 

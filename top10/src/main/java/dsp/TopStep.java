@@ -18,7 +18,7 @@ public class TopStep {
     public static final String USAGE_WARNING = "WARNING. Usage: args={classpath, input inPath, outputPath, n}. ";
     public static final int DEFAULT_N = 10;
     public static final String SUCCESS_POSTFIX = "_SUCCESS";
-    private static TreeMap<Integer, TreeSet<TopTuple>> decadeMap;
+    private static TreeMap<Integer, Utils.Pair<Double,TreeSet<TopTuple>>> decadeMap;
     private static final int numberOfDecades = 12;
     private static final int firstDecade = 1900;
     private static int n;
@@ -58,12 +58,12 @@ public class TopStep {
         StringBuilder sb =new StringBuilder();
         sb.append("Top Related Words Summary:\n");
         for (int j = 0, decade = firstDecade; j< numberOfDecades; j++, decade+=10) {
-            TreeSet<TopTuple> topTuples = decadeMap.get(new Integer(decade));
+            Utils.Pair<Double,TreeSet<TopTuple>> topTuples = decadeMap.get(new Integer(decade));
             sb.append("\n\tdecade "+decade+":\n");
             if (topTuples == null) {
                 continue;
             }
-            for (TopTuple tt : topTuples) {
+            for (TopTuple tt : topTuples.value) {
                 sb.append("\t\t"+tt.toString()+"\n");
             }
         }
@@ -86,7 +86,6 @@ public class TopStep {
 
     private static void parseFile(String filename) {
         InputStream fileInputStream = S3Utils.getFileInputStream(Constants.BUCKET_NAME, filename);
-
         String line = null;
         try(BufferedReader in = new BufferedReader(new InputStreamReader(fileInputStream))) {
             while((line = in.readLine()) != null) {
@@ -96,16 +95,19 @@ public class TopStep {
                 String first = words[0];
                 String second = words[1];
                 double pmi = Double.parseDouble(values[7]);
-                TreeSet<TopTuple> topTuples = decadeMap.get(new Integer(decade));
+                Utils.Pair<Double,TreeSet<TopTuple>> topTuples = decadeMap.get(new Integer(decade));
                 if (null == topTuples) {
-                    topTuples = new TreeSet<>();
+                    topTuples = new Utils.Pair<>(Double.NEGATIVE_INFINITY,new TreeSet<>());
                     decadeMap.put(new Integer(decade), topTuples);
                 }
-                topTuples.add(new TopTuple(first,second,pmi));
-                if (topTuples.size() > n) {
-                    TopTuple smallest = topTuples.first();
-                    topTuples.remove(smallest);
+                if (topTuples.value.size() < n) {
+                    topTuples.value.add(new TopTuple(first,second,pmi));
                 }
+                else if (pmi > topTuples.key){
+                    topTuples.value.remove(topTuples.value.first());
+                    topTuples.value.add(new TopTuple(first,second,pmi));
+                }
+
             }
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
