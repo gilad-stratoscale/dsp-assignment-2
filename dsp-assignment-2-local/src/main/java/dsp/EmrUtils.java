@@ -6,7 +6,12 @@ import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClient;
 import com.amazonaws.services.elasticmapreduce.model.*;
 import com.amazonaws.services.elasticmapreduce.util.StepFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class EmrUtils {
     // TODO: config optimal number?
@@ -26,6 +31,7 @@ public class EmrUtils {
     public static final String JAR3_URL = "s3://dsp2-emr-bucket/jars/s3.jar";
     private static final String JAR4_URL = "s3://dsp2-emr-bucket/jars/s4.jar";
     private static final String PARTB_JAR_URL = "s3://dsp2-emr-bucket/jars/b.jar";
+    private static AmazonElasticMapReduceClient emr;
 
 
     public static RunJobFlowResult createCluster(List<StepConfig> jarStepConfigs, String s3LogUri, int instanceCount, String jobName){
@@ -36,7 +42,7 @@ public class EmrUtils {
         catch (Exception e) {
             throw new AmazonClientException("Cannot load the credentials from the credential profiles file. ",e);
         }
-        AmazonElasticMapReduceClient emr = new AmazonElasticMapReduceClient(credentials);
+        emr = new AmazonElasticMapReduceClient(credentials);
         StepFactory stepFactory = new StepFactory();
         Collection<StepConfig> steps = new ArrayList<>();
 
@@ -167,9 +173,53 @@ public class EmrUtils {
         jarSteps.add(EmrUtils.createJarStep(step5));
 
         String s3LogUri = "s3://dsp2-emr-bucket/logs/testlog"+ uuid.toString() +".log";
-        EmrUtils.createCluster(jarSteps,s3LogUri, INSTANCE_COUNT, "DSP2");
+        RunJobFlowResult runJobResult = EmrUtils.createCluster(jarSteps, s3LogUri, INSTANCE_COUNT, "DSP2");
         System.out.println("log location:  "+s3LogUri);
         System.out.println("I\\O dirs extension:  "+uuid);
+        System.out.printf("Run JobFlowId is: %s\n", runJobResult.getJobFlowId());
 
+        while(true) {
+            DescribeClusterRequest desc = new DescribeClusterRequest()
+                    .withClusterId(runJobResult.getJobFlowId());
+            DescribeClusterResult clusterResult = emr.describeCluster(desc);
+            Cluster cluster = clusterResult.getCluster();
+            String status = cluster.getStatus().getState();
+            System.out.printf("Status: %s\n", status);
+            if(status.equals(ClusterState.TERMINATED.toString()) || status.equals(ClusterState.TERMINATED_WITH_ERRORS.toString())) {
+                showCounters();
+                break;
+            }
+            try {
+                TimeUnit.SECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void showCounters() {
+        String[] keys = new String[]{
+                Constants.WORD_COUNT_MAP_OUTPUT,
+                Constants.STAGE_2_MAP_OUTPUT,
+                Constants.STAGE_3_MAP_OUTPUT,
+                Constants.PART_B_MAP_OUTPUT};
+        System.out.println("Key Value pair count:");
+        for (String key : keys) {
+            try {
+                File file = S3Utils.downloadFile2(Constants.BUCKET_NAME, key);
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line=null;
+                while (true) {
+                    line = br.readLine();
+                    if (line==null) {
+                        break;
+                    }
+                    System.out.println(line);
+                }
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
