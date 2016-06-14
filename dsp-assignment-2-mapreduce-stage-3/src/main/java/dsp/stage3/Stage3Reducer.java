@@ -52,6 +52,7 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
             }
             catch(NumberFormatException e) {
                 e.printStackTrace(System.err);
+				throw e;
             }
 
 			String valueToEmit = String.join(
@@ -80,6 +81,10 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 	}
 
 	private double calcPmi(long count, long count1, long count2, long totalWords) {
-		return Math.log(count) + Math.log(totalWords) - Math.log(count1) - Math.log(count2);
+		return logBaseTwo(count) + logBaseTwo(totalWords) - logBaseTwo(count1) - logBaseTwo(count2);
+	}
+
+	private double logBaseTwo(double i) {
+		return Math.log(i) / Math.log(2);
 	}
 }
