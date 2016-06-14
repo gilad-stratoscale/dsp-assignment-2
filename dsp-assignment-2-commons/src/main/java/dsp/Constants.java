@@ -8,6 +8,12 @@ public class Constants {
 
     public static final String COUNTER_NAME_PREFIX = "DECADE_";
 
+    public static final String
+            WORD_COUNT_MAP_OUTPUT = "WORD_COUNT_MAP_OUTPUT",
+            STAGE_2_MAP_OUTPUT = "STAGE_2_MAP_OUTPUT",
+            STAGE_3_MAP_OUTPUT = "STAGE_3_MAP_OUTPUT",
+            PART_B_MAP_OUTPUT = "PART_B_MAP_OUTPUT";
+
     public static enum Counters {
         DECADE_1900,
         DECADE_1910,

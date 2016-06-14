@@ -1,9 +1,6 @@
 package dsp.stage2;
 
-import dsp.Constants;
-import dsp.CounterHandler;
-import dsp.FirstWordPartitioner;
-import dsp.MapReduceTask;
+import dsp.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -13,7 +10,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 // TODO This class is not tested yet
 public class Stage2 implements MapReduceTask {
@@ -31,6 +30,16 @@ public class Stage2 implements MapReduceTask {
 
         boolean success = job.waitForCompletion(true);
 
+
+        try {
+            String output = "MAP_OUTPUT_RECORDS for stage2: " + job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            System.out.println(output);
+            byte[] data = String.valueOf(output).getBytes();
+            InputStream is = new ByteArrayInputStream(data);
+            S3Utils.uploadFile(Constants.BUCKET_NAME, Constants.STAGE_2_MAP_OUTPUT,is, data.length);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //System.exit(success ? 0 : 1);
 	}

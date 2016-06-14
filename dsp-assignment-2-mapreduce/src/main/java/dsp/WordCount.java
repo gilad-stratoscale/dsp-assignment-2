@@ -10,7 +10,9 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class WordCount implements MapReduceTask {
 
@@ -30,6 +32,15 @@ public class WordCount implements MapReduceTask {
             success = job.waitForCompletion(true);
             CounterHandler.writeCounters(job);
 
+            try {
+                String output = "MAP_OUTPUT_RECORDS for wordcount: " + job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+                System.out.println(output);
+                byte[] data = String.valueOf(output).getBytes();
+                InputStream is = new ByteArrayInputStream(data);
+                S3Utils.uploadFile(Constants.BUCKET_NAME, Constants.WORD_COUNT_MAP_OUTPUT,is, data.length);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             //System.exit(success ? 0 : 1);
         }
         catch (Exception e) {

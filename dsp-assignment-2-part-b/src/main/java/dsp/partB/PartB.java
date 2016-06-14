@@ -1,6 +1,8 @@
 package dsp.partB;
 
+import dsp.Constants;
 import dsp.MapReduceTask;
+import dsp.S3Utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -10,7 +12,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by hagai_lvi on 11/06/2016.
@@ -20,6 +24,17 @@ public class PartB implements MapReduceTask{
 		Configuration conf = new Configuration();
 		Job job = new PartB().getJob(conf, new Path(args[1]), new Path(args[2]),"partB");
 		System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+		try {
+			String output = "MAP_OUTPUT_RECORDS for part b: " + job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+			System.out.println(output);
+			byte[] data = String.valueOf(output).getBytes();
+			InputStream is = new ByteArrayInputStream(data);
+			S3Utils.uploadFile(Constants.BUCKET_NAME, Constants.PART_B_MAP_OUTPUT,is, data.length);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

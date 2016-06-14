@@ -1,9 +1,6 @@
 package dsp.stage3;
 
-import dsp.Constants;
-import dsp.CounterHandler;
-import dsp.FirstWordPartitioner;
-import dsp.MapReduceTask;
+import dsp.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -13,8 +10,9 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
 
 public class Stage3 implements MapReduceTask {
 	public static void main(String[] args) throws Exception {
@@ -36,6 +34,16 @@ public class Stage3 implements MapReduceTask {
         Stage3 stage3 = new Stage3();
         Job job = stage3.getJob(conf, new Path(args[1]), new Path(args[2]),"stage3");
         boolean success = job.waitForCompletion(true);
+
+        try {
+            String output = "MAP_OUTPUT_RECORDS for stage3: " + job.getCounters().findCounter("org.apache.hadoop.mapred.Task$Counter", "MAP_OUTPUT_RECORDS").getValue();
+            System.out.println(output);
+            byte[] data = String.valueOf(output).getBytes();
+            InputStream is = new ByteArrayInputStream(data);
+            S3Utils.uploadFile(Constants.BUCKET_NAME, Constants.STAGE_3_MAP_OUTPUT,is, data.length);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //System.exit(success ? 0 : 1);
 	}
