@@ -46,6 +46,7 @@ public class TopN implements MapReduceTask {
 		TopN topn = new TopN();
 
 		Job job = topn.getJob(conf, new Path(inPath), new Path(outPath), "topN");
+        job.waitForCompletion(true);
 	}
 
 	@Override
