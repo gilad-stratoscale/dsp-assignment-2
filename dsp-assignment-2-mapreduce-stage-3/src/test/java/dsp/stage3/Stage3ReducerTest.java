@@ -1,5 +1,6 @@
 package dsp.stage3;
 
+import dsp.Constants;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
@@ -21,15 +22,16 @@ public class Stage3ReducerTest {
 		reduceDriver = ReduceDriver.newReduceDriver(reducer);
 	}
 
-	//@Test
+	@Test
 	public void reduce() throws Exception {
 
-		String year = "1660",
+		String year = "1950",
 				w1 = "strange",
 				w2 = "thing",
 				w1Count = "3",
 				w2Count = "2",
 				twoGramCount = "1";
+		reduceDriver.getConfiguration().set(Constants.COUNTER_NAME_PREFIX+year,"1000");
 
 		reduceDriver.
 				withInput(
@@ -41,7 +43,7 @@ public class Stage3ReducerTest {
 								String.join(Stage3Mapper.SEPERATOR, w1 + " " + w2, twoGramCount, w1, w1Count)))).
 				withOutput(
 						new Text(String.join(Stage3Mapper.SEPERATOR, year, w1 + " " + w2)),
-						new Text(String.join(Stage3Mapper.SEPERATOR, twoGramCount, w2, w2Count, w1, w1Count, "8.447557256065176"))).
+						new Text(String.join(Stage3Mapper.SEPERATOR, twoGramCount, w2, w2Count, w1, w1Count, "7.380821783940931"))).
 				runTest();
 	}
 

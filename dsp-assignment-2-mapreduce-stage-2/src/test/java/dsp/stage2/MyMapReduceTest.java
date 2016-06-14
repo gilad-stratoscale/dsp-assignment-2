@@ -52,4 +52,13 @@ public class MyMapReduceTest {
 
 		mapReduceDriver.runTest();
 	}
+
+	@Test
+	public void testMapReduceSameWord() throws IOException {
+		mapReduceDriver.withInput(new Text(), new Text("1990\taaa\t8"));
+		mapReduceDriver.withInput(new Text(), new Text("1990\taaa aaa\t6"));
+		mapReduceDriver.withOutput(new Text("1990\taaa"), new Text("aaa\t8"));
+		mapReduceDriver.withOutput(new Text("1990\taaa"), new Text("aaa aaa\t6\taaa\t8"));
+		mapReduceDriver.runTest();
+	}
 }
