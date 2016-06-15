@@ -52,6 +52,7 @@ public class TopNComparatorTest {
 		Assert.assertTrue("expected smaller than 0, got " + compare,compare > 0);
 	}
 
+	@Test
 	public void testEquals() {
 		Text o1 = new Text("1990\t1.23\tabc edf");
 		Text o2 = new Text("1990\t1.23\tabc edf");
