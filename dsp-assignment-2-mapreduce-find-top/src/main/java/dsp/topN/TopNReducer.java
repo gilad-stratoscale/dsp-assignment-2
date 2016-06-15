@@ -4,6 +4,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.TreeSet;
 
 /**
@@ -11,7 +12,7 @@ import java.util.TreeSet;
  */
 public class TopNReducer extends Reducer<Text, Text, Text, Text> {
 
-	private TreeSet<String> set = null;
+	private LinkedList<String> set = null;
 	@Override
 	public void reduce(Text key, Iterable<Text> values,Context context) throws IOException, InterruptedException {
 
@@ -19,7 +20,7 @@ public class TopNReducer extends Reducer<Text, Text, Text, Text> {
 
 		String pmi = getPmi(key.toString());
 		if (pmi.contains("~")) {
-			if (set != null && (set.size() < N)) {
+			if (set != null) {
 				writeToContext(context);
 			}
 			set = null;
@@ -28,17 +29,13 @@ public class TopNReducer extends Reducer<Text, Text, Text, Text> {
 		}
 
 		if (set == null){
-			set = new TreeSet<>();
+			set = new LinkedList<>();
 		}
 		if (set.size() == N) {
-			return;// we have written it in previous iteration
+			return;// we have all the biggest pmis already
 		}
 
 		set.add(key.toString());
-		if (set.size() == N) {
-			writeToContext(context);
-
-		}
 	}
 
 	private void writeToContext(Context context) throws IOException, InterruptedException {
