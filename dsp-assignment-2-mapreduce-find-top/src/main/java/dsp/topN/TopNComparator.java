@@ -16,8 +16,8 @@ public class TopNComparator implements RawComparator<Text> {
     @Override
     public int compare(byte[] bytes, int i, int i1, byte[] bytes1, int i2, int i3) {
         try {
-            byte[] first = Arrays.copyOfRange(bytes, i, i + i1 - 1);
-            byte[] second = Arrays.copyOfRange(bytes1, i2, i2 + i3 - 1);
+            byte[] first = Arrays.copyOfRange(bytes, i+1, i + i1);
+            byte[] second = Arrays.copyOfRange(bytes1, i2+1, i2 + i3);
             String firstString = new String(first, Charset.forName("UTF-8"));
             String secondString = new String(second, Charset.forName("UTF-8"));
             return compareStrings(firstString, secondString);
