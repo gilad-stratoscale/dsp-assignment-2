@@ -36,8 +36,8 @@ public class TopNReducerTest {
 		reduceDriver.withInput(new Text("1980\t~\t~"),lst);
 
 
-		reduceDriver.withOutput(new Text("1980\t124.1231\tccc bbb"), new Text(""));
 		reduceDriver.withOutput(new Text("1980\t125.1231\tddd bbb"), new Text(""));
+		reduceDriver.withOutput(new Text("1980\t124.1231\tccc bbb"), new Text(""));
 		reduceDriver.runTest();
 	}
 
