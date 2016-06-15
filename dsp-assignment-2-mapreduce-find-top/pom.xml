@@ -30,7 +30,7 @@
                     </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>dsp.partB.PartB</mainClass>
+                            <mainClass>dsp.topN.TopN</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
