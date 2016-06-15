@@ -46,7 +46,6 @@ public class S3Utils {
         }
         else {
             logger.info("Using production S3");
-            // TODO shouldn't we set region?
             s3 = new AmazonS3Client(new InstanceProfileCredentialsProvider());
         }
     }

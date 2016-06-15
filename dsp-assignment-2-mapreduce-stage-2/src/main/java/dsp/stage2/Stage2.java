@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-// TODO This class is not tested yet
 public class Stage2 implements MapReduceTask {
 	public static void main(String[] args) throws Exception {
         System.out.println("INFO: running Stage2's main. args: ");
@@ -50,11 +49,9 @@ public class Stage2 implements MapReduceTask {
         Job job = Job.getInstance(conf, jobName);
         job.setJarByClass(Stage2.class);
         job.setMapperClass(Stage2Mapper.class);
-        // TODO when using the reducer as a combiner an array out of bounds is thrown. check this
         job.setReducerClass(Stage2Reducer.class);
         job.setPartitionerClass(FirstWordPartitioner.class);
 
-        // TODO what should this be?
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setInputFormatClass(TextInputFormat.class);

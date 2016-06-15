@@ -33,7 +33,6 @@ public class Stage3Reducer extends Reducer<Text, Text, Text, Text> {
 				this.currentWord = words;
 				this.currentDecade = decade;
 				this.currentKeyCount = count;
-				// TODO assert that the iterator has no more values
 
 				return;
 			}

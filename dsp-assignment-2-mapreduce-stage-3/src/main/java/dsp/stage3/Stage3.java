@@ -53,13 +53,11 @@ public class Stage3 implements MapReduceTask {
         Job job = Job.getInstance(conf, "Stage3");
         job.setJarByClass(Stage3.class);
         job.setMapperClass(Stage3Mapper.class);
-        // TODO when using the reducer as a combiner an array out of bounds is thrown. check this
         job.setReducerClass(Stage3Reducer.class);
         job.setPartitionerClass(FirstWordPartitioner.class);
 
         job.setInputFormatClass(TextInputFormat.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        // TODO what should this be?
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
 

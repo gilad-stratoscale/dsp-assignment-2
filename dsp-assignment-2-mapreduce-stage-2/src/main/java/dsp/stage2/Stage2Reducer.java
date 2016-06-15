@@ -30,7 +30,6 @@ public class Stage2Reducer extends Reducer<Text, Text, Text, Text>  {
 				this.currentWord = words;
 				this.currentDecade = decade;
 				this.currentKeyCount = count;
-				// TODO assert that the iterator has no more values
 
 				context.write(new Text(currentDecade + seperator + currentWord), new Text(currentWord + seperator + currentKeyCount));
 				return;

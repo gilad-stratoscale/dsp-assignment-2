@@ -42,11 +42,9 @@ public class PartB implements MapReduceTask{
 		Job job = Job.getInstance(conf, "partB");
 		job.setJarByClass(PartB.class);
 		job.setMapperClass(PartBMapper.class);
-		// TODO when using the reducer as a combiner an array out of bounds is thrown. check this
 		job.setReducerClass(PartBReducer.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
-		// TODO what should this be?
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 

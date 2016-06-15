@@ -55,11 +55,9 @@ public class TopN implements MapReduceTask {
 		job.setJarByClass(TopN.class);
 		job.setMapperClass(TopNMapper.class);
         job.setSortComparatorClass(TopNComparator.class);
-		// TODO when using the reducer as a combiner an array out of bounds is thrown. check this
 		job.setReducerClass(TopNReducer.class);
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
-		// TODO what should this be?
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
 		job.setPartitionerClass(TopNPartitioner.class);
