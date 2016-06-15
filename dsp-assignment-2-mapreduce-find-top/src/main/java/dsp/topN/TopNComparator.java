@@ -40,29 +40,40 @@ public class TopNComparator implements RawComparator<Text> {
     public int compareStrings(String s, String s1) {
         String[] splits1 = s.split("\t");
         String[] splits2 = s1.split("\t");
+
         String decade1 = splits1[0];
         String decade2 = splits2[0];
-        if (splits1.length < 2 || splits2.length < 2 || splits1[1].matches("~") || splits2[1].matches("~")) {
-            return decade1.compareTo(decade2);
-        }
+
+        String pmiString1 = splits1[1];
+        String pmiString2 = splits2[1];
 
         String words1 = splits1[2];
         String words2 = splits2[2];
-        try {
-            double pmi1 = Double.parseDouble(splits1[1]);
-            double pmi2 = Double.parseDouble(splits2[1]);
-            return ((decade1.compareTo(decade2) > 0 ) ? 1 :
-                    (pmi1 > pmi2 ? 1 :
-                            (words1.compareTo(words2) > 0 ? 1 :
-                                    (words1.compareTo(words2) < 0 ? -1 :0))));
+
+        if (splits1.length < 2 || splits2.length < 2) {
+            throw new RuntimeException("unexpected strings \"" + s + "\", " + s1 + "\"." );
         }
-        catch(NumberFormatException e) {
-            e.printStackTrace(System.err);
-            return 0;
+
+        if (decade1.compareTo(decade2) != 0) {
+            return decade1.compareTo(decade2);
         }
+
+        if (pmiString1.matches("~") || pmiString2.matches("~")) {
+            // tilde ascii is bigger than digits ascii, so "~".compareTo("123") is bigger than 0
+            return pmiString1.compareTo(pmiString2);
+        }
+
+        if (pmiString1.compareTo(pmiString2) != 0) {
+            double pmi1 = Double.parseDouble(pmiString1);
+            double pmi2 = Double.parseDouble(pmiString2);
+            return Double.compare(pmi2, pmi1);
+        }
+
+        return words1.compareTo(words2);
     }
 
     public static void main(String[] args) {
+
         String s1="1900\t2.0\taaa bbb",
                 s2="1910\t3.5\taa bb",
                 s3="1900\t1.1\ta b",
